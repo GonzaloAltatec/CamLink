@@ -16,7 +16,7 @@ class ISAPI(API):
             req = requests.get(self.url, auth=HTTPDigestAuth('admin', self.key))
 
             if req.status_code == 200:
-                return(req)
+                return(req.text)
             else:
                 return(req)
         

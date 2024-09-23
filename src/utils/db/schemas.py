@@ -1,24 +1,15 @@
+from typing import Optional
 from pydantic import BaseModel
-from typing import List
 
-class SystemBase(BaseModel):
-    name: str
-
-class System(SystemBase):
+class Device(BaseModel):
     id: int
-    elements: List[int] = []
-
-    model_config = {
-        "from_attributes": True
-    }
-
-class DeviceBase(BaseModel):
     name: str
-    parent_system: int
+    installation: str
+    user: str
+    password: str
+    ip: str
+    port: int
+    model: Optional[str]
 
-class Device(DeviceBase):
-    id: int
-
-    model_config = {
-        "from_attributes": True
-    }
+    class Config:
+        from_attributes = True
