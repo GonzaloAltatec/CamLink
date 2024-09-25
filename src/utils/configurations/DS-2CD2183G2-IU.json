@@ -61,9 +61,8 @@
     "video": "99"
   },
   "sd": {
-    "capacity": "121942",
-    "state": "ok",
-    "format": "EXT4"
+    "capacity": "60290",
+    "state": "ok"
   },
   "calendar": {
     "enabled": "true",

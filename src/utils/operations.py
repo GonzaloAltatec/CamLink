@@ -483,7 +483,15 @@ class Hikvision:
         state_text = None
 
         #Revisar esta variable. Puede cambiar según Firmware
-        xml_namespace = {'ns':'http://www.hikvision.com/ver20/XMLSchema'}
+        xml_namespace = None
+
+        if self.model == 'DS-2CD2183G2-IU':
+            xml_namespace = {'ns':'http://www.hikvision.com/ver10/XMLSchema'}
+        elif self.model == 'DS-2CD1143G2-IUF':
+            xml_namespace = self.namespace
+
+
+
 
         hdd_tag = root.find('ns:hdd', xml_namespace)
         if hdd_tag is not None:
