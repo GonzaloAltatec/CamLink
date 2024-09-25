@@ -1,6 +1,3 @@
-from datetime import time
-from fastapi import responses
-from sqlalchemy import over
 from .comunication import ISAPI
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -484,9 +481,9 @@ class Hikvision:
         root = ET.ElementTree(ET.fromstring(response)).getroot()
         capacity_text = None
         state_text = None
-        format_text = None
 
-        xml_namespace = {'ns':'http://www.hikvision.com/ver10/XMLSchema'}
+        #Revisar esta variable. Puede cambiar según Firmware
+        xml_namespace = {'ns':'http://www.hikvision.com/ver20/XMLSchema'}
 
         hdd_tag = root.find('ns:hdd', xml_namespace)
         if hdd_tag is not None:
@@ -500,14 +497,8 @@ class Hikvision:
             if capacity_tag is not None:
                 capacity_text = capacity_tag.text
 
-            #SD Format Type
-            format_tag = hdd_tag.find('ns:formatType', xml_namespace)
-            if format_tag is not None:
-                format_text = format_tag.text
-
         return {'capacity': capacity_text,
-                'state': state_text,
-                'format': format_text}
+                'state': state_text}
 
     #GET Calendar
     def getcalendar(self):

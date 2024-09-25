@@ -25,10 +25,10 @@
   "mstream": {
     "encoding": "H.265",
     "plus": "true",
-    "width": "3840",
-    "height": "2160",
-    "bitrate": "6144",
-    "average": "3072",
+    "width": "2560",
+    "height": "1440",
+    "bitrate": "3072",
+    "average": "1536",
     "fps": "2000"
   },
   "sstream": {
@@ -62,8 +62,7 @@
   },
   "sd": {
     "capacity": "121942",
-    "state": "ok",
-    "format": "EXT4"
+    "state": "ok"
   },
   "calendar": {
     "enabled": "true",
@@ -71,43 +70,42 @@
       "overwrite": "true",
       "prerecord": "10",
       "postrecord": "10",
-      "expiration": "true",
-      "duration": "P30DT0H"
+      "expiration": "true"
     },
     "schedule": {
       "Monday": {
         "start": "00:00:00",
-        "end": "24:00:00",
+        "end": "24:00",
         "mode": "MOTION"
       },
       "Tuesday": {
         "start": "00:00:00",
-        "end": "24:00:00",
+        "end": "24:00",
         "mode": "MOTION"
       },
       "Wednesday": {
         "start": "00:00:00",
-        "end": "24:00:00",
+        "end": "24:00",
         "mode": "MOTION"
       },
       "Thursday": {
         "start": "00:00:00",
-        "end": "24:00:00",
+        "end": "24:00",
         "mode": "MOTION"
       },
       "Friday": {
         "start": "00:00:00",
-        "end": "24:00:00",
+        "end": "24:00",
         "mode": "MOTION"
       },
       "Saturday": {
         "start": "00:00:00",
-        "end": "24:00:00",
+        "end": "24:00",
         "mode": "MOTION"
       },
       "Sunday": {
         "start": "00:00:00",
-        "end": "24:00:00",
+        "end": "24:00",
         "mode": "MOTION"
       }
     }

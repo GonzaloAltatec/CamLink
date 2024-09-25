@@ -13,4 +13,4 @@ class Device(Base):
     password = Column(String)
     ip = Column(String)
     port = Column(Integer)
-    model = Column(String, nullable=True) #Optional field to fill with device model
+    model = Column(String) #Optional field to fill with device model

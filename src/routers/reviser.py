@@ -596,7 +596,7 @@ def device_sd(id:int, db:Session=Depends(database.get_db)):
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
-    parameters = {'status': '', 'capacity': '', 'state': '', 'format': ''}
+    parameters = {'status': '', 'capacity': '', 'state': ''}
 
     if data['capacity'] != conf['sd']['capacity']:
         parameters['status'] = 'Error'
@@ -609,12 +609,6 @@ def device_sd(id:int, db:Session=Depends(database.get_db)):
         parameters['state'] = 'Error'
     else:
         parameters['state'] = 'Correct'
-
-    if data['format'] != conf['sd']['format']:
-        parameters['status'] = 'Error'
-        parameters['format'] = 'Error'
-    else:
-        parameters['format'] = 'Correct'
 
     if parameters['status'] == 'Error':
         return (parameters)
@@ -683,21 +677,23 @@ def device_calendar(id:int, db:Session=Depends(database.get_db)):
         else:
             parameters['advanced']['postrecord'] = 'Correct'
 
-    #Expiration Enabled
-    for day in days:
-        if data['advanced']['expiration'] != conf['calendar']['advanced']['expiration']:
-            parameters['status'] = 'Error'
-            parameters['advanced']['expiration'] = 'Error'
-        else:
-            parameters['advanced']['expiration'] = 'Correct'
+    model = str(device.model)
+    if model == 'DS-2CD2183G2-IU':
+        #Expiration Enabled
+        for day in days:
+            if data['advanced']['expiration'] != conf['calendar']['advanced']['expiration']:
+                parameters['status'] = 'Error'
+                parameters['advanced']['expiration'] = 'Error'
+            else:
+                parameters['advanced']['expiration'] = 'Correct'
 
-    #Expiration Duration
-    for day in days:
-        if data['advanced']['duration'] != conf['calendar']['advanced']['duration']:
-            parameters['status'] = 'Error'
-            parameters['advanced']['duration'] = 'Error'
-        else:
-            parameters['advanced']['duration'] = 'Correct'
+        #Expiration Duration
+        for day in days:
+            if data['advanced']['duration'] != conf['calendar']['advanced']['duration']:
+                parameters['status'] = 'Error'
+                parameters['advanced']['duration'] = 'Error'
+            else:
+                parameters['advanced']['duration'] = 'Correct'
 
     #Start Time
     for day in days:

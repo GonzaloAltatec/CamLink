@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel
 
 class Device(BaseModel):
@@ -9,7 +8,7 @@ class Device(BaseModel):
     password: str
     ip: str
     port: int
-    model: Optional[str]
+    model: str
 
     class Config:
         from_attributes = True
