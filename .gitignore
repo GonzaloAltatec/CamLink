@@ -3,3 +3,4 @@
 src/__pycache__
 src/utils/db/camlink.db
 src/routers/develop.py
+venv/lib/python3.12/site-packages/pip
