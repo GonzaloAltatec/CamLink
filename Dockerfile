@@ -1,5 +1,5 @@
 # Utiliza una imagen base de Python
-FROM python:3.12-bookworm
+FROM python:3.12-alpine
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
