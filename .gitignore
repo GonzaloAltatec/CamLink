@@ -1,8 +1,5 @@
 .env
-.venv
-venv
-./venv
-/venv
+venv/
 src/__pycache__
 src/routers/__pycache__
 src/utils/__pycache__
