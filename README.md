@@ -44,15 +44,10 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <ul>
-            <li><a href="#python-3.12">Python 3.12</a></li>
-            <ul>
-                <li><a href="#debian">Debian</a></li>
-                <li><a href="#debian">Fedora</a></li>
-            </ul>
             <li><a href="#docker">Docker</a></li>
             <ul>
                 <li><a href="#debian">Debian</a></li>
-                <li><a href="#debian">Fedora</a></li>
+                <li><a href="#fedora">Fedora</a></li>
             </ul>
         </ul>
         <li><a href="#installation">Installation</a></li>
@@ -61,9 +56,15 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
+    <ul>
+    <li><a href="#python-3.12">Python 3.12</a></li>
+            <ul>
+                <li><a href="#debian">Debian</a></li>
+                <li><a href="#fedora">Fedora</a></li>
+            </ul>
+    </ul>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -72,7 +73,9 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+<p>Project made by Altatec Seguridad.</p>
+<p>The project is a Rest API designed to be mounted on a business environment server. The API waits to receive an ID of an element registered in the internal DB of the ERP.</p>
+<p>The received element should contain data of a CCTV model such as security cameras. Actually the API is able to comunicate with Hikvisio ISAPI based devices in order to check it's configurations and change parameters remotely.</p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -93,120 +96,6 @@ To get a local copy up and running follow these simple example steps.
 ## Prerequisites
 
 <p>Follow the steps to install project dependencies.</p>
-
-<!-- PYTHON-3.12 INSTALL -->
-### Python 3.12
-<!-- Debian -->
-* <b>Debian</b>
-
-1. Update system:
-
-    ```sh
-    sudo apt update -y
-    sudo apt upgrade -y
-    ```
-
-2. Install dependencies:
-
-    ```sh
-    apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
-    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
-    ```
-
-3. Download source code:
-
-    ```sh
-    wget https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz
-    ```
-
-4. Extract files:
-
-    ```sh
-    tar -xf Python-3.12.0.tgz
-    ```
-
-5. Configure and build:
-
-    ```sh
-    cd Python-3.12.0
-    ./configure --enable-optimizations
-    ```
-
-6. Build Python:
-
-    ```sh
-    make -j 4
-    ```
-
-7. Install:
-
-    ```sh
-    make altinstall
-    ```
-
-    <small><i>Using altinstall instead of install prevents it from replacing the system's default Python interpreter (which could cause system tools to malfunction).</i></small>
-
-8. Verify Installation:
-
-    ```sh
-    python3.12 --version
-    ```
-
-<!-- Fedora -->
-* <b>Fedora</b>
-
-1. Update system:
-
-    ```sh
-    sudo dnf update
-    ```
-
-2. Install dependencies:
-
-    ```sh
-    sudo dnf groupinstall 'Development Tools'
-    sudo dnf install openssl-devel bzip2-devel libffi-devel sqlite-devel 
-    ```
-
-3. Download source code:
-
-    ```sh
-    wget https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz
-    ```
-
-4. Extract files:
-
-    ```sh
-    tar -xf Python-3.12.0.tgz
-    ```
-
-5. Configure and build:
-
-    ```sh
-    cd Python-3.12.0
-    ./configure --enable-optimizations
-    ```
-
-6. Build Python:
-
-    ```sh
-    make -j 4
-    ```
-
-7. Install:
-
-    ```sh
-    make altinstall
-    ```
-
-    <small><i>Using altinstall instead of install prevents it from replacing the system's default Python interpreter (which could cause system tools to malfunction).</i></small>
-
-8. Verify Installation:
-
-    ```sh
-    python3.12 --version
-    ```
 
 <!-- DOCKER INSTALL -->
 ### Docker
@@ -275,11 +164,57 @@ To get a local copy up and running follow these simple example steps.
 
 ## Installation
 
-1. Clone the repo
+1. <b>Clone the repo</b>
 
    ```sh
    git clone https://github.com/GonzaloAltatec/CamLink.git
    ```
+
+2. <b>Acess repo directory</b>
+
+   ```sh
+   cd CamLink
+   ```
+
+3. <b>Build Docker image</b>
+
+   ```sh
+   docker build -t camlink .
+   ```
+
+4. <b>Run Docker container</b>
+
+   ```sh
+   docker run -p8000:<your_port> camlink
+   ```
+
+5. <b>Stop Docker Container</b>
+
+    <p> To stop the container you have to list the running images. </p>
+
+    ```sh
+    docker ps -a
+    ```
+
+    <p> Once you list the running containers copy the container ID and execute: </p>
+
+    ```sh
+    docker rm <container_id>
+    ```
+
+6. <b>(Optional) Detached mode & Logs</b>
+
+    <p> If you want to run Docker container on "Detached mode" run the following command: </p>
+
+   ```sh
+   docker run -d -p8000:<your_port> camlink
+   ```
+
+   <p> Once if you run the container on detached mode the container will run on the background, but if you want to see the logs and console information run this command: </p>
+
+    ```sh
+    docker logs <container_id>
+    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -317,6 +252,124 @@ Don't forget to give the project a star! Thanks again!
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+<br>
+
+<p> Project it's written in Python 3.12 version, if you want to execute source code to test without building the docker image, please read the following Python 3.12 installation guide. </p>
+
+<!-- PYTHON-3.12 INSTALL -->
+### Python-3.12 Installation
+<!-- Debian -->
+* <b>Debian</b>
+
+1. Update system:
+
+    ```sh
+    sudo apt update -y
+    sudo apt upgrade -y
+    ```
+
+2. Install dependencies:
+
+    ```sh
+    sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
+    ```
+
+3. Download source code:
+
+    ```sh
+    wget https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz
+    ```
+
+4. Extract files:
+
+    ```sh
+    tar -xf Python-3.12.0.tgz
+    ```
+
+5. Configure and build:
+
+    ```sh
+    cd Python-3.12.0
+    ./configure --enable-optimizations
+    ```
+
+6. Build Python:
+
+    ```sh
+    make -j 4
+    ```
+
+7. Install:
+
+    ```sh
+    sudo make altinstall
+    ```
+
+    <small><i>Using altinstall instead of install prevents it from replacing the system's default Python interpreter (which could cause system tools to malfunction).</i></small>
+
+8. Verify Installation:
+
+    ```sh
+    python3.12 --version
+    ```
+
+<!-- Fedora -->
+* <b>Fedora</b>
+
+1. Update system:
+
+    ```sh
+    sudo dnf update
+    ```
+
+2. Install dependencies:
+
+    ```sh
+    sudo dnf groupinstall 'Development Tools'
+    sudo dnf install openssl-devel bzip2-devel libffi-devel sqlite-devel 
+    ```
+
+3. Download source code:
+
+    ```sh
+    wget https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz
+    ```
+
+4. Extract files:
+
+    ```sh
+    tar -xf Python-3.12.0.tgz
+    ```
+
+5. Configure and build:
+
+    ```sh
+    cd Python-3.12.0
+    ./configure --enable-optimizations
+    ```
+
+6. Build Python:
+
+    ```sh
+    make -j 4
+    ```
+
+7. Install:
+
+    ```sh
+    sudo make altinstall
+    ```
+
+    <small><i>Using altinstall instead of install prevents it from replacing the system's default Python interpreter (which could cause system tools to malfunction).</i></small>
+
+8. Verify Installation:
+
+    ```sh
+    python3.12 --version
+    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
