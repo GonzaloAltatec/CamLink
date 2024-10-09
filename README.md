@@ -164,6 +164,19 @@ To get a local copy up and running follow these simple example steps.
 
 ## Installation
 
+### Enviroment
+
+<p> This project uses dotenv library to use envoriment vatiables nedeet to ensure the correct comunication wit Odoo ERP. To run the program correctly you must create <code>.env</code> file on root directory and write the following variables:</p>
+
+<p>URL='<code>erp_url</code>'</p>
+<p>DB='<code>db_url</code>'</p>
+<p>USERNAME='<code>username</code>'</p>
+<p>PASSWORD='<code>password</code>'</p>
+
+<hr>
+
+### Docker
+
 1. <b>Clone the repo</b>
 
    ```sh
