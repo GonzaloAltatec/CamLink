@@ -1,4 +1,5 @@
 .venv
+venv/
 src/__pycache__
 src/utils/db/camlink.db
 *.md
