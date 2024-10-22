@@ -1,15 +1,12 @@
+from fastapi import HTTPException
 import requests
 from requests.auth import HTTPDigestAuth
 import xmlrpc.client
 
-class API:
+class ISAPI:
     def __init__(self, url, key):
         self.url = url
         self.key = key
-
-class ISAPI(API):
-    def __init__(self, url, key):
-        super().__init__(url, key)
 
     def getapi(self): #Operaciones GET para API Hikvision
         try:
@@ -38,8 +35,8 @@ class ISAPI(API):
                 return(req)
             
         #EXCEPCIOENS
-        except Exception as e:
-            return(f'Error: [{e}]')
+        except Exception:
+            raise HTTPException(status_code=404)
         
 class OdooAPI:
     def __init__(self, url, db, username, password):

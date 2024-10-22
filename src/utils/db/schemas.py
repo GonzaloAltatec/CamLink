@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 class Device(BaseModel):
     id: int
@@ -12,3 +13,6 @@ class Device(BaseModel):
 
     class Config:
         from_attributes = True
+
+class IDList(BaseModel):
+    ids: List[int]

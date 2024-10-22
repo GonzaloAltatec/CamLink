@@ -1,9 +1,8 @@
 #FastAPI imports
-from fastapi import APIRouter, Depends, HTTPException, status
-#SQLAlchemy Session import
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, status
 #Database import
-from ..utils.db import models, database
+from ..utils.db import models
+from ..utils.db.schemas import IDList
 #Hikvision API operator
 from ..utils.operations import Hikvision as Hik
 #JSON Library
@@ -16,38 +15,22 @@ router = APIRouter(
     prefix='/revise'
 )
 
-#Get device element from DB and show data
-@router.get('/{id}/db-info', status_code=status.HTTP_200_OK) 
-def db_info(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    return device
-
 #Check if DeviceName match with Odoo DeviceName
-@router.get('/{id}/name', status_code=status.HTTP_200_OK) 
-def device_name(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_name(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getname()
-    if data != device.name:
+    if data != device['name']:
         return {'status': 'Incorrect Name',
                 'device_name': data,
-                'odoo_name': device.name}
+                'odoo_name': device['name']}
     else:
         return(status.HTTP_200_OK)
 
 #Check NTP configuration
-@router.get('/{id}/ntp', status_code=status.HTTP_200_OK) 
-def device_ntp(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_ntp(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getntp()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -73,14 +56,10 @@ def device_ntp(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Check DST configuration
-@router.get('/{id}/dst', status_code=status.HTTP_200_OK) 
-def device_dst(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_dst(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getdst()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
     parameters = {'status': '', 'mode': '', 'timezone': ''}
@@ -106,14 +85,10 @@ def device_dst(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Check Security configuration
-@router.get('/{id}/security', status_code=status.HTTP_200_OK) 
-def device_security(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_security(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getsec()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -139,14 +114,10 @@ def device_security(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Check DNS configuration
-@router.get('/{id}/dns', status_code=status.HTTP_200_OK) 
-def device_dns(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_dns(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getdns()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -172,20 +143,16 @@ def device_dns(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Check Mail configuration
-@router.get('/{id}/email', status_code=status.HTTP_200_OK) 
-def device_mail(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_mail(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getmail()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
     parameters = {'status': '', 'name': '', 'sender': '', 'server': '', 'port': '', 'receiver': '', 'email': ''}
     #Check device sender name
-    if data['name'] != f'{device.name} {device.installation}':
+    if data['name'] != f'{device['name']} {device['installation']}':
         parameters['status'] = 'Error'
         parameters['name'] = 'Error'
     else:
@@ -233,20 +200,16 @@ def device_mail(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Check Main Stream configuration
-@router.get('/{id}/mstream', status_code=status.HTTP_200_OK) 
-def device_mstream(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_mstream(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getmstream()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
     parameters = {'status': '', 'name': '', 'encoding': '', 'plus': '', 'width': '', 'height': '', 'bitrate': '', 'average': '', 'fps': ''}
     #Channel Name
-    if data['name'] != device.name:
+    if data['name'] != device['name']:
         parameters['status'] = 'Error'
         parameters['name'] = 'Error'
     else:
@@ -308,20 +271,16 @@ def device_mstream(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Check Sub Stream configuration
-@router.get('/{id}/sstream', status_code=status.HTTP_200_OK) 
-def device_sstream(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_sstream(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getsstream()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
     parameters = {'status': '', 'name': '', 'encoding': '', 'width': '', 'height': '', 'bitrate': '', 'fps': ''}
     #Channel Name
-    if data['name'] != device.name:
+    if data['name'] != device['name']:
         parameters['status'] = 'Error'
         parameters['name'] = 'Error'
     else:
@@ -369,28 +328,20 @@ def device_sstream(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Check if OSD Show name match with Odoo name field
-@router.get('/{id}/osd', status_code=status.HTTP_200_OK)
-def device_osd(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_osd(device:dict): 
+    api = Hik(device['ip'], device['password'])
     data = api.getosd()
     
-    if data != device.name:
+    if data != device['name']:
         return('Error')
     else:
         return(status.HTTP_200_OK)
 
 #Overlay data showing format check
-@router.get('/{id}/overlays', status_code=status.HTTP_200_OK)
-def device_overlay(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_overlay(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getoverlay()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -417,14 +368,10 @@ def device_overlay(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Motion event configurations
-@router.get('/{id}/motion', status_code=status.HTTP_200_OK)
-def device_motion(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_motion(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getmotion()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -464,14 +411,10 @@ def device_motion(id:int, db:Session=Depends(database.get_db)):
         return (status.HTTP_200_OK)
 
 #Recording enabled
-@router.get('/{id}/record', status_code=status.HTTP_200_OK)
-def device_record(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_record(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getrecord()
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -497,15 +440,11 @@ def device_record(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #SD Error Exception
-@router.get('/{id}/sderror', status_code=status.HTTP_200_OK)
-def device_sderror(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_sderror(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getsderr()
 
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -524,15 +463,11 @@ def device_sderror(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Illegal Access Exception
-@router.get('/{id}/illaccess', status_code=status.HTTP_200_OK)
-def device_access(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_access(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getillaccess()
 
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -551,15 +486,11 @@ def device_access(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #SD Quota
-@router.get('/{id}/quota', status_code=status.HTTP_200_OK)
-def device_quota(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_quota(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getquota()
 
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -583,15 +514,11 @@ def device_quota(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #SD Info
-@router.get('/{id}/sd', status_code=status.HTTP_200_OK)
-def device_sd(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_sd(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getsd()
 
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -615,15 +542,11 @@ def device_sd(id:int, db:Session=Depends(database.get_db)):
         return(status.HTTP_200_OK)
 
 #Calendar
-@router.get('/{id}/calendar', status_code=status.HTTP_200_OK)
-def device_calendar(id:int, db:Session=Depends(database.get_db)):
-    device = db.query(models.Device).filter(models.Device.id == id).first()
-    if not device:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    api = Hik(device.ip, device.password)
+def device_calendar(device:dict):
+    api = Hik(device['ip'], device['password'])
     data = api.getcalendar()
 
-    conf_path = Path('src') / 'utils' / 'configurations' / f'{device.model}.json'
+    conf_path = Path('src') / 'utils' / 'configurations' / f'{device['model']}.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
@@ -676,7 +599,7 @@ def device_calendar(id:int, db:Session=Depends(database.get_db)):
         else:
             parameters['advanced']['postrecord'] = 'Correct'
 
-    model = str(device.model)
+    model = str(device['model'])
     if model == 'DS-2CD2183G2-IU':
         #Expiration Enabled
         for day in days:
@@ -723,80 +646,87 @@ def device_calendar(id:int, db:Session=Depends(database.get_db)):
     else:
         return(status.HTTP_200_OK)
 
-@router.get('/{id}/', status_code=status.HTTP_200_OK)
-def revise(id:int, db:Session=Depends(database.get_db)):
-    parameters = {'status': '200',
-                  'name': '',
-                  'ntp': '',
-                  'dst': '',
-                  'security': '',
-                  'dns': '',
-                  'email': '',
-                  'mstream': '',
-                  'sstream': '',
-                  'osd': '',
-                  'overlay': '',
-                  'motion': '',
-                  'record': '',
-                  'sderror': '',
-                  'illaccess': '',
-                  'quota': '',
-                  'sd': '',
-                  'calendar': ''}
+@router.post('/', status_code=status.HTTP_200_OK)
+def revise(id_list: IDList):
+    comprobations = []
+    for id in id_list.ids:
+        device = models.device(id)
+        parameters = {'id': '', 
+                      'status': '200', 
+                      'name': '', 
+                      'ntp': '', 
+                      'dst': '', 
+                      'security': '', 
+                      'dns': '', 
+                      'email': '', 
+                      'mstream': '', 
+                      'sstream': '', 
+                      'osd': '', 
+                      'overlay': '', 
+                      'motion': '', 
+                      'record': '', 
+                      'sderror': '', 
+                      'illaccess': '', 
+                      'quota': '', 
+                      'sd': '', 
+                      'calendar': ''}
+        parameters['id'] = str(id)
 
-    name_call = device_name(id, db)
-    parameters['name'] = str(name_call)
+        name_call = device_name(device)
+        parameters['name'] = str(name_call)
 
-    ntp_call = device_ntp(id, db)
-    parameters['ntp'] = str(ntp_call)
+        ntp_call = device_ntp(device)
+        parameters['ntp'] = str(ntp_call)
 
-    dst_call = device_dst(id, db)
-    parameters['dst'] = str(dst_call)
+        dst_call = device_dst(device)
+        parameters['dst'] = str(dst_call)
 
-    security_call = device_security(id, db)
-    parameters['security'] = str(security_call)
+        security_call = device_security(device)
+        parameters['security'] = str(security_call)
 
-    dns_call = device_dns(id, db)
-    parameters['dns'] = str(dns_call)
+        dns_call = device_dns(device)
+        parameters['dns'] = str(dns_call)
 
-    email_call = device_mail(id, db)
-    parameters['email'] = str(email_call)
+        email_call = device_mail(device)
+        parameters['email'] = str(email_call)
 
-    mstream_call = device_mstream(id, db)
-    parameters['mstream'] = str(mstream_call)
+        mstream_call = device_mstream(device)
+        parameters['mstream'] = str(mstream_call)
 
-    sstream_call = device_sstream(id, db)
-    parameters['sstream'] = str(sstream_call)
+        sstream_call = device_sstream(device)
+        parameters['sstream'] = str(sstream_call)
 
-    osd_call = device_osd(id, db)
-    parameters['osd'] = str(osd_call)
+        osd_call = device_osd(device)
+        parameters['osd'] = str(osd_call)
 
-    overlay_call = device_overlay(id, db)
-    parameters['overlay'] = str(overlay_call)
+        overlay_call = device_overlay(device)
+        parameters['overlay'] = str(overlay_call)
 
-    motion_call = device_motion(id, db)
-    parameters['motion'] = str(motion_call)
+        motion_call = device_motion(device)
+        parameters['motion'] = str(motion_call)
 
-    record_call = device_record(id, db)
-    parameters['record'] = str(record_call)
+        record_call = device_record(device)
+        parameters['record'] = str(record_call)
 
-    sderror_call = device_sderror(id, db)
-    parameters['sderror'] = str(sderror_call)
+        sderror_call = device_sderror(device)
+        parameters['sderror'] = str(sderror_call)
 
-    illaccess_call = device_access(id, db)
-    parameters['illaccess'] = str(illaccess_call)
+        illaccess_call = device_access(device)
+        parameters['illaccess'] = str(illaccess_call)
 
-    quota_call = device_quota(id, db)
-    parameters['quota'] = str(quota_call)
+        quota_call = device_quota(device)
+        parameters['quota'] = str(quota_call)
 
-    sd_call = device_sd(id, db)
-    parameters['sd'] = str(sd_call)
+        sd_call = device_sd(device)
+        parameters['sd'] = str(sd_call)
 
-    calendar_call = device_calendar(id, db)
-    parameters['calendar'] = str(calendar_call)
+        calendar_call = device_calendar(device)
+        parameters['calendar'] = str(calendar_call)
 
-    for x in parameters.values():
-        if x != '200':
-            parameters['status'] = '400'
+        for x in parameters.values():
+            if x != '200':
+                parameters['status'] = '400'
 
-    return(parameters)
+        comprobations.append(parameters)
+
+    return(comprobations)
