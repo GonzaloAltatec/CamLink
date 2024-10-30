@@ -501,12 +501,11 @@ class Hikvision:
                 state_text = state_tag.text
             
             #SD Capacity
-            capacity_tag = hdd_tag.find('ns:capacity', xml_namespace)
-            if capacity_tag is not None:
-                capacity_text = capacity_tag.text
+            #capacity_tag = hdd_tag.find('ns:capacity', xml_namespace)
+            #if capacity_tag is not None:
+            #    capacity_text = capacity_tag.text
 
-        return {'capacity': capacity_text,
-                'state': state_text}
+        return {'state': state_text} #'capacity': capacity_text
 
     #GET Calendar
     def getcalendar(self):

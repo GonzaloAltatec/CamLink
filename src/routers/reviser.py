@@ -20,11 +20,9 @@ def device_name(device:dict):
     api = Hik(device['ip'], device['password'])
     data = api.getname()
     if data != device['name']:
-        return {'status': 'Incorrect Name',
-                'device_name': data,
-                'odoo_name': device['name']}
+        return {'status': 'Error', 'error': f'Odoo name ({device['name']}) does not match with device name ({data})'}
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Check NTP configuration
 def device_ntp(device:dict):
@@ -34,26 +32,25 @@ def device_ntp(device:dict):
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
-    parameters = {'status': '', 'server': '', 'sync': ''}
+    parameters = {'server': '', 'sync': ''}
     #NTP server check (Default: es.pool.ntp.org)
     if data['server'] != conf['ntp']['server']:
-        parameters['status'] = 'Error'
         parameters['server'] = 'Error'
     else:
         parameters['server'] = 'Correct'
     
     #Synchronization check
     if data['sync'] != conf['ntp']['sync']:
-        parameters['status'] = 'Error'
         parameters['sync'] = 'Error'
     else:
         parameters['sync'] = 'Correct'
 
     #Check parameter errors and return device config status
-    if parameters['server'] == 'Error' or parameters['sync'] == 'Error':
-        return(parameters)
+    for v in parameters.values():
+        if v == 'Error':
+            return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Check DST configuration
 def device_dst(device:dict):
@@ -70,7 +67,7 @@ def device_dst(device:dict):
         parameters['mode'] = 'Error'
     else:
         parameters['mode'] = 'Correct'
-    
+
     #Synchronization check
     if data['timezone'] != conf['dst']['timezone']:
         parameters['status'] = 'Error'
@@ -80,9 +77,10 @@ def device_dst(device:dict):
 
     #Check parameter errors and return device config status
     if parameters['mode'] == 'Error' or parameters['timezone'] == 'Error':
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
         return(parameters)
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Check Security configuration
 def device_security(device:dict):
@@ -99,7 +97,7 @@ def device_security(device:dict):
         parameters['web'] = 'Error'
     else:
         parameters['web'] = 'Correct'
-    
+
     #RSTP Authentication check
     if data['rtsp_sec'] != conf['security']['rtsp']:
         parameters['status'] = 'Error'
@@ -109,9 +107,10 @@ def device_security(device:dict):
 
     #Check parameter errors and return device config status
     if parameters['web'] == 'Error' or parameters['rtsp'] == 'Error':
-        return(parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Check DNS configuration
 def device_dns(device:dict):
@@ -128,7 +127,7 @@ def device_dns(device:dict):
         parameters['primary'] = 'Error'
     else:
         parameters['primary'] = 'Correct'
-    
+
     #Secondary DNS check
     if data['secondary'] != conf['dns']['secondary']:
         parameters['status'] = 'Error'
@@ -138,9 +137,10 @@ def device_dns(device:dict):
 
     #Check parameter errors and return device config status
     if parameters['primary'] == 'Error' or parameters['secondary'] == 'Error':
-        return(parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Check Mail configuration
 def device_mail(device:dict):
@@ -157,7 +157,7 @@ def device_mail(device:dict):
         parameters['name'] = 'Error'
     else:
         parameters['name'] = 'Correct'
-    
+
     #SMTP Server
     if data['server'] != conf['mail']['server']:
         parameters['status'] = 'Error'
@@ -195,9 +195,10 @@ def device_mail(device:dict):
 
     #Check parameter errors and return device config status
     if parameters['name'] == 'Error' or parameters['server'] == 'Error' or parameters['port'] == 'Error' or parameters['sender'] == 'Error' or parameters['receiver'] == 'Error' or parameters['email'] == 'Error':
-        return(parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Check Main Stream configuration
 def device_mstream(device:dict):
@@ -214,7 +215,7 @@ def device_mstream(device:dict):
         parameters['name'] = 'Error'
     else:
         parameters['name'] = 'Correct'
-    
+
     #H.265 Encoding
     if data['encoding'] != conf['mstream']['encoding']:
         parameters['status'] = 'Error'
@@ -266,9 +267,10 @@ def device_mstream(device:dict):
 
     #Check parameter errors and return device config status
     if parameters['status'] == 'Error':
-        return(parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Check Sub Stream configuration
 def device_sstream(device:dict):
@@ -285,7 +287,7 @@ def device_sstream(device:dict):
         parameters['name'] = 'Error'
     else:
         parameters['name'] = 'Correct'
-    
+
     #H.265 Encoding
     if data['encoding'] != conf['sstream']['encoding']:
         parameters['status'] = 'Error'
@@ -313,7 +315,7 @@ def device_sstream(device:dict):
         parameters['bitrate'] = 'Error'
     else:
         parameters['bitrate'] = 'Correct'
-  
+
     #FPS
     if data['fps'] != conf['sstream']['fps']:
         parameters['status'] = 'Error'
@@ -323,19 +325,20 @@ def device_sstream(device:dict):
 
     #Check parameter errors and return device config status
     if parameters['status'] == 'Error':
-        return(parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Check if OSD Show name match with Odoo name field
 def device_osd(device:dict): 
     api = Hik(device['ip'], device['password'])
     data = api.getosd()
-    
+
     if data != device['name']:
-        return('Error')
+        return 'Error'
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Overlay data showing format check
 def device_overlay(device:dict):
@@ -346,7 +349,7 @@ def device_overlay(device:dict):
         conf = json.load(f)
 
     parameters = {'status': '', 'week': '', 'format': ''}
-    
+
     #No Week Display
     if data['week'] != conf['overlays']['week']:
         parameters['status'] = 'Error'
@@ -363,9 +366,10 @@ def device_overlay(device:dict):
 
     #Check configuration Status
     if parameters['status'] == 'Error':
-        return(parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Motion event configurations
 def device_motion(device:dict):
@@ -406,9 +410,10 @@ def device_motion(device:dict):
         parameters['target'] = 'Correct'
 
     if parameters['status'] == 'Error':
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
         return parameters
     else:
-        return (status.HTTP_200_OK)
+        return 'Correct'
 
 #Recording enabled
 def device_record(device:dict):
@@ -435,9 +440,10 @@ def device_record(device:dict):
         parameters['method'] = 'Correct'
 
     if parameters['status'] == 'Error':
-        return (parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #SD Error Exception
 def device_sderror(device:dict):
@@ -458,9 +464,10 @@ def device_sderror(device:dict):
         parameters['method'] = 'Correct'
 
     if parameters['status'] == 'Error':
-        return(parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Illegal Access Exception
 def device_access(device:dict):
@@ -481,9 +488,10 @@ def device_access(device:dict):
         parameters['method'] = 'Correct'
 
     if parameters['status'] == 'Error':
-        return(parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #SD Quota
 def device_quota(device:dict):
@@ -509,9 +517,10 @@ def device_quota(device:dict):
         parameters['video'] = 'Correct'
 
     if parameters['status'] == 'Error':
-        return (parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #SD Info
 def device_sd(device:dict):
@@ -522,13 +531,13 @@ def device_sd(device:dict):
     with open(conf_path, 'r') as f:
         conf = json.load(f)
 
-    parameters = {'status': '', 'capacity': '', 'state': ''}
+    parameters = {'status': '', 'state': ''}
 
-    if data['capacity'] != conf['sd']['capacity']:
-        parameters['status'] = 'Error'
-        parameters['capacity'] = 'Error'
-    else:
-        parameters['capacity'] = 'Correct'
+    #if data['capacity'] != conf['sd']['capacity']:
+    #    parameters['status'] = 'Error'
+    #    parameters['capacity'] = 'Error'
+    #else:
+    #    parameters['capacity'] = 'Correct'
 
     if data['state'] != conf['sd']['state']:
         parameters['status'] = 'Error'
@@ -537,9 +546,10 @@ def device_sd(device:dict):
         parameters['state'] = 'Correct'
 
     if parameters['status'] == 'Error':
-        return (parameters)
+        parameters = {k: v for k,v in parameters.items() if v == 'Error'}
+        return parameters
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 #Calendar
 def device_calendar(device:dict):
@@ -566,7 +576,7 @@ def device_calendar(device:dict):
                                              'Sunday': {'start': '', 'end': '', 'mode': ''}}}
 
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    
+
     #Enabled
     for day in days:
         if data['enabled'] != conf['calendar']['enabled']:
@@ -574,7 +584,7 @@ def device_calendar(device:dict):
             parameters['enabled'] = 'Error'
     else:
             parameters['enabled'] = 'Correct'
-    
+
     #Overwrite
     for day in days:
         if data['advanced']['overwrite'] != conf['calendar']['advanced']['overwrite']:
@@ -582,7 +592,7 @@ def device_calendar(device:dict):
             parameters['advanced']['overwrite'] = 'Error'
         else:
             parameters['advanced']['overwrite'] = 'Correct'
-    
+
     #Pre-Record
     for day in days:
         if data['advanced']['prerecord'] != conf['calendar']['advanced']['prerecord']:
@@ -644,89 +654,104 @@ def device_calendar(device:dict):
     if parameters['status'] == 'Error':
         return (parameters)
     else:
-        return(status.HTTP_200_OK)
+        return 'Correct'
 
 @router.post('/', status_code=status.HTTP_200_OK)
 def revise(id_list: IDList):
     comprobations = []
     for id in id_list.ids:
         device = models.device(id)
-        parameters = {'id': '', 
-                      'status': '200', 
-                      'name': '', 
-                      'ntp': '', 
-                      'dst': '', 
-                      'security': '', 
-                      'dns': '', 
-                      'email': '', 
-                      'mstream': '', 
-                      'sstream': '', 
-                      'osd': '', 
-                      'overlay': '', 
-                      'motion': '', 
-                      'record': '', 
-                      'sderror': '', 
-                      'illaccess': '', 
-                      'quota': '', 
-                      'sd': '', 
-                      'calendar': ''}
-        parameters['id'] = str(id)
+        if device != 'Error' and device is not None:
+            parameters = {'id': '', 
+                        'status': 'Correct', 
+                        'name': {}, 
+                        'ntp': {}, 
+                        'dst': {}, 
+                        'security': {}, 
+                        'dns': {}, 
+                        'email': {}, 
+                        'mstream': {}, 
+                        'sstream': {}, 
+                        'osd': {}, 
+                        'overlay': {}, 
+                        'motion': {}, 
+                        'record': {}, 
+                        'sderror': {}, 
+                        'illaccess': {}, 
+                        'quota': {}, 
+                        'sd': {}, 
+                        'calendar': {}}
 
-        name_call = device_name(device)
-        parameters['name'] = str(name_call)
+            parameters['id'] = str(id)
 
-        ntp_call = device_ntp(device)
-        parameters['ntp'] = str(ntp_call)
+            name_call = device_name(device)
+            parameters['name'] = name_call
 
-        dst_call = device_dst(device)
-        parameters['dst'] = str(dst_call)
+            ntp_call = device_ntp(device)
+            parameters['ntp'] = ntp_call
 
-        security_call = device_security(device)
-        parameters['security'] = str(security_call)
+            dst_call = device_dst(device)
+            parameters['dst'] = dst_call
 
-        dns_call = device_dns(device)
-        parameters['dns'] = str(dns_call)
+            security_call = device_security(device)
+            parameters['security'] = security_call
 
-        email_call = device_mail(device)
-        parameters['email'] = str(email_call)
+            dns_call = device_dns(device)
+            parameters['dns'] = dns_call
 
-        mstream_call = device_mstream(device)
-        parameters['mstream'] = str(mstream_call)
+            email_call = device_mail(device)
+            parameters['email'] = email_call
 
-        sstream_call = device_sstream(device)
-        parameters['sstream'] = str(sstream_call)
+            mstream_call = device_mstream(device)
+            parameters['mstream'] = mstream_call
 
-        osd_call = device_osd(device)
-        parameters['osd'] = str(osd_call)
+            sstream_call = device_sstream(device)
+            parameters['sstream'] = sstream_call
 
-        overlay_call = device_overlay(device)
-        parameters['overlay'] = str(overlay_call)
+            osd_call = device_osd(device)
+            parameters['osd'] = osd_call
 
-        motion_call = device_motion(device)
-        parameters['motion'] = str(motion_call)
+            overlay_call = device_overlay(device)
+            parameters['overlay'] = overlay_call
 
-        record_call = device_record(device)
-        parameters['record'] = str(record_call)
+            motion_call = device_motion(device)
+            parameters['motion'] = motion_call
 
-        sderror_call = device_sderror(device)
-        parameters['sderror'] = str(sderror_call)
+            record_call = device_record(device)
+            parameters['record'] = record_call
 
-        illaccess_call = device_access(device)
-        parameters['illaccess'] = str(illaccess_call)
+            sderror_call = device_sderror(device)
+            parameters['sderror'] = sderror_call
 
-        quota_call = device_quota(device)
-        parameters['quota'] = str(quota_call)
+            illaccess_call = device_access(device)
+            parameters['illaccess'] = illaccess_call
 
-        sd_call = device_sd(device)
-        parameters['sd'] = str(sd_call)
+            quota_call = device_quota(device)
+            parameters['quota'] = quota_call
 
-        calendar_call = device_calendar(device)
-        parameters['calendar'] = str(calendar_call)
+            sd_call = device_sd(device)
+            parameters['sd'] = sd_call
 
-        for x in parameters.values():
-            if x != '200':
-                parameters['status'] = '400'
+            calendar_call = device_calendar(device)
+            parameters['calendar'] = calendar_call
 
-        comprobations.append(parameters)
+            erased_k = []
+            for k, v in parameters.items():
+                if k == 'id' or k == 'status':
+                    continue
 
-    return(comprobations)
+                if v == 'Correct':
+                    erased_k.append(k)
+                elif v != 'Correct':
+                    parameters['status'] = 'Error'
+
+            for x in erased_k:
+                del parameters[x]
+
+            if parameters['status'] == 'Correct':
+                correct_save = {'id', 'status'}
+                parameters = {k: v for k,v in parameters.items() if k in correct_save}
+
+            comprobations.append(parameters)
+
+    return comprobations

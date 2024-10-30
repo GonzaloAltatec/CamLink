@@ -15,7 +15,6 @@ router = APIRouter(
 )
 
 #ENDPOINT: Recive Odoo element ID and read it's properties
-@router.post('/{id}/', status_code=status.HTTP_200_OK)
 def create_device(id:int, request:schemas.Device, db:Session = Depends(database.get_db)):
     #Send element ID to Odoo Class
     erp = Odoo(id)

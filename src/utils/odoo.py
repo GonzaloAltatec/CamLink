@@ -28,7 +28,7 @@ class Odoo:
 
         return(req_read)
 
-    def element_sys(self):
+    def element_sys(self): #Return element asociated System ID
         req = self.erp.search('altatec.elemento', 'id', self.id)
         req_read = self.erp.read(req)
         return(str(req_read[0]['sistema_id'][0])) #Change [0]['sistema_id'][0] to -> [0]['sistema_id'][1] in order to get systen name istead of ID
