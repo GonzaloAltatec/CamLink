@@ -11,6 +11,7 @@ def device(id:int):
 
     #Read all property ID's
     for ids in properties_ids:
+    
         data = erp.element_data(ids)
         if data is not None:
             #Read System from element
@@ -31,11 +32,10 @@ def device(id:int):
             #Conditional to ensure device it's compatible with CamLink operations
             if device_data['product_id'] == 'CVCCV' or 'CVKP1' or 'CVKP2':
                 #Requesting device model
-                try:
-                    conf = Hik(device_data['DIRECCION IP'], device_data['PASSWORD'])
-                    device_model = conf.getmodel()
-                except Exception:
-                    raise HTTPException(status_code=404)
+                conf = Hik(device_data['DIRECCION IP'], device_data['PASSWORD'])
+                device_model = conf.getmodel()
+                if device_model is None:
+                    raise HTTPException(status_code=404, detail='Device model not found')
                 #Give Odoo data to Device Model
                 new_device = {'id': id, 
                             'name': device_data['NOMBRE'], 
@@ -48,4 +48,4 @@ def device(id:int):
                 #Make changes on the DB
                 return(new_device)
             else:
-                return 'Error'
+                raise HTTPException(status_code=404, detail=f'Error on device: {id} - Device type not accepted {device_data['product_id']}')
