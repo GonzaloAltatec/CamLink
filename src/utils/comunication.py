@@ -1,16 +1,19 @@
 from fastapi import HTTPException
 import requests
+from requests.exceptions import ConnectionError, Timeout, RequestException
 from requests.auth import HTTPDigestAuth
 import xmlrpc.client
+from .exceptions import DeviceRequestError, DeviceConnectionError, DeviceTimeoutError
 
 class ISAPI:
     def __init__(self, url, key):
         self.url = url
         self.key = key
 
-    def getapi(self): #Operaciones GET para API Hikvision
+    def getapi(self): #GET operations for HikvisionAPI
         try:
-            req = requests.get(self.url, auth=HTTPDigestAuth('admin', self.key))
+            req = requests.get(self.url, auth=HTTPDigestAuth('admin', self.key), timeout=1)
+            req.raise_for_status()
 
             if req.status_code == 200:
                 return(req.text)
@@ -19,18 +22,21 @@ class ISAPI:
         
         #EXCEPCIONES
         except ConnectionError:
-            return('[-] Error de Conexión')
+            raise DeviceConnectionError('Error: Connection Error')
+        except Timeout:
+            raise DeviceTimeoutError('Error: Timeout')
+        except RequestException as e:
+            raise DeviceRequestError(f'[!] Request Error: {e}')
         except KeyboardInterrupt:
-            return('\n[-] Interrumpiendo Programa...')
-        except Exception as e:
-            return(f'Error: [{e}]')
+            print('\n[-] Interrumpiendo Programa...')
+            return None
 
-    def putapi(self, c_data): #Operaciones GET para API Hikvision
+    def putapi(self, c_data): #PUT operations for HikvisionAPI
         try:
-            req = requests.put(self.url, data = c_data, headers = {'Content-Type': 'application/xml'}, auth=HTTPDigestAuth('admin', self.key))
+            req = requests.put(self.url, data = c_data, headers = {'Content-Type': 'application/xml'}, auth=HTTPDigestAuth('admin', self.key), timeout=3)
 
             if req.status_code == 200:
-                return(req)
+                return(req.text)
             else:
                 return(req)
             

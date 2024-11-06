@@ -5,5 +5,5 @@ app = FastAPI()
 
 app.include_router(reviser.router)
 app.include_router(erp_data.router)
-app.include_router(develop.router)
+#app.include_router(develop.router)
 app.include_router(configurator.router)

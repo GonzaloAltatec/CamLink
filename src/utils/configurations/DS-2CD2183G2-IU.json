@@ -44,7 +44,7 @@
   },
   "motion": {
     "enabled": "true",
-    "grid": "fffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffc",
+    "grid": "fffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffc000000",
     "sensitivity": "80",
     "target": "human,vehicle"
   },
@@ -61,7 +61,7 @@
     "video": "99"
   },
   "sd": {
-    "capacity": "60290",
+    "capacity": "60906",
     "state": "ok"
   },
   "calendar": {

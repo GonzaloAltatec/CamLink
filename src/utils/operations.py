@@ -1,6 +1,7 @@
 from .comunication import ISAPI
 from pathlib import Path
 import xml.etree.ElementTree as ET
+from .exceptions import DeviceRequestError, DeviceConnectionError, DeviceTimeoutError
 
 class Hikvision:
     def __init__(self, ip, password):
@@ -33,21 +34,43 @@ class Hikvision:
         return(gateway)
 
     def getmodel(self): #Check deviceInfo endpoint and filter <model> tag to get the camera model
-        req = ISAPI(f'http://{self.ip}/ISAPI/System/deviceInfo', self.password)
-        response = str(req.getapi())
-        root = ET.ElementTree(ET.fromstring(response))
-        model_text = None
-        model_tag = root.find('ns:model', self.namespace)
-        if model_tag is not None:
-            model_text = model_tag.text
-        return(model_text)
+        try:
+            req = ISAPI(f'http://{self.ip}/ISAPI/System/deviceInfo', self.password)
+            response = str(req.getapi())
+            if not response:
+                raise DeviceRequestError('Request Error')
+            root = ET.ElementTree(ET.fromstring(response))
+            model_tag = root.find('ns:model', self.namespace)
+            model_text = model_tag.text if model_tag is not None else None
+            return(model_text)
 
+        except DeviceConnectionError as e:
+            return(e)
+        except DeviceTimeoutError as e:
+            print(e)
+        except DeviceRequestError as e:
+            print(e)
+        except ET.ParseError:
+            print("Error al analizar el XML de la respuesta")
+        return None
     #--------------------------------------------------------------------------
     #INFORMATION
     def info(self): #Show device info (Not working on API Response)
-        req = ISAPI(f'http://{self.ip}/ISAPI/System/deviceInfo', self.password)
-        response = req.getapi()
-        return(response)
+        try:
+            req = ISAPI(f'http://{self.ip}/ISAPI/System/deviceInfo', self.password)
+            response = req.getapi()
+            return(response)
+
+        except DeviceConnectionError as e:
+            return(e)
+        except DeviceTimeoutError as e:
+            print(e)
+        except DeviceRequestError as e:
+            print(e)
+        except ET.ParseError:
+            print("Error al analizar el XML de la respuesta")
+        return None
+
 
     #GET device name
     def getname(self):      
@@ -637,16 +660,34 @@ class Hikvision:
         data = f'<deviceName>{name}</deviceName>'
         parameter = req.putapi(data)
         return(parameter)
-    
+
+    def putime(self): #Configure "Time Settings"
+        #NTP Configuration
+        ntp_req = ISAPI(f'http://{self.ip}/ISAPI/System/time/ntpServers', self.password)
+        with open(f'{self.directory}ntp.xml', 'r') as f:
+            ntp_xml = f.read()
+            f.close()
+        ntp_req.putapi(ntp_xml)
+
+        #DST Configuration
+        time_req = ISAPI(f'http://{self.ip}/ISAPI/System/time', self.password)
+        with open(f'{self.directory}dst.xml', 'r') as f:
+            time_xml = f.read()
+            f.close()
+        time_req.putapi(time_xml)
+
+        #Time request
+        h_req = ISAPI(f'http://{self.ip}/ISAPI/System/time/localTime', self.password)
+        return(h_req.getapi())
+
     def putosd(self, name): #Modifiy OSD
         #Change OSD name
         osd_req = ISAPI(f'http://{self.ip}/ISAPI/System/Video/inputs/channels/1', self.password)
         #osd_data = f'<name>{name}</deviceName>'
-        
-        
+
         osd_tree = ET.parse(f'{self.directory}osd.xml')
         osd_root = osd_tree.getroot()
-        
+
         #Here we write the new named given to the function to a new XML file
         for osname in osd_root.iter(f'{self.xmlschema}name'):
             osname.text = f'{name}'
@@ -704,25 +745,6 @@ class Hikvision:
         format_conf = format_req.putapi('')
         return(quota_conf, format_conf)
 
-    def putime(self): #Configure "Time Settings" (Return actual device time)
-        #NTP Configuration
-        ntp_req = ISAPI(f'http://{self.ip}/ISAPI/System/time/ntpServers', self.password)
-        with open(f'{self.directory}ntp.xml', 'r') as f:
-            ntp_xml = f.read()
-            f.close()
-        ntp_req.putapi(ntp_xml)
-
-        #DST Configuration
-        time_req = ISAPI(f'http://{self.ip}/ISAPI/System/time', self.password)
-        with open(f'{self.directory}dst.xml', 'r') as f:
-            time_xml = f.read()
-            f.close()
-        time_req.putapi(time_xml)
-
-        #Time request
-        h_req = ISAPI(f'http://{self.ip}/ISAPI/System/time/localTime', self.password)
-        return(h_req.getapi())
-    
     def putsec(self): #Configure "Security" settings
         websec_req = ISAPI(f'http://{self.ip}/ISAPI/Security/webCertificate', self.password)
         with open(f'{self.directory}security.xml', 'r') as f:

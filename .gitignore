@@ -3,3 +3,4 @@ venv/
 **/__pycache__/
 src/utils/db/camlink.db
 src/routers/develop.py
+src/testing.py
