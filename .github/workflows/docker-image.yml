@@ -31,7 +31,7 @@ jobs:
       # 3. Ejecuta los tests unitarios
       - name: Run Tests
         run: |
-          pytest src/utils/tests/
+          pytest ./src/utils/tests/
           
       # 4. Construye la imagen de Docker
       - name: Build Docker Image
