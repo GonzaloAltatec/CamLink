@@ -1,8 +1,8 @@
 #FastAPI imports
-from fastapi import APIRouter, HTTPException, status
-
+from fastapi import APIRouter, status
+#Custom Exceptions
 from src.utils.exceptions import DeviceConnectionError, DeviceRequestError, DeviceTimeoutError
-#Database import
+#Models and data formatting imports
 from ..utils.db import models
 from ..utils.db.schemas import IDList
 #Hikvision API operator
@@ -11,7 +11,7 @@ from ..utils.operations import Hikvision as Hik
 import json
 #File path Library
 from pathlib import Path
-
+#Event logger
 import logging
 
 logging.basicConfig(level=logging.ERROR)
@@ -563,12 +563,12 @@ async def device_calendar(device:dict):
                                'expiration': '',
                                'duration': ''},
                   'schedule': {'Monday': {'start': '', 'end': '', 'mode': ''}, 
-                                             'Tuesday': {'start': '', 'end': '', 'mode': ''}, 
-                                             'Wednesday': {'start': '', 'end': '', 'mode': ''}, 
-                                             'Thursday': {'start': '', 'end': '', 'mode': ''}, 
-                                             'Friday': {'start': '', 'end': '', 'mode': ''}, 
-                                             'Saturday': {'start': '', 'end': '', 'mode': ''}, 
-                                             'Sunday': {'start': '', 'end': '', 'mode': ''}}}
+                               'Tuesday': {'start': '', 'end': '', 'mode': ''}, 
+                               'Wednesday': {'start': '', 'end': '', 'mode': ''}, 
+                               'Thursday': {'start': '', 'end': '', 'mode': ''}, 
+                               'Friday': {'start': '', 'end': '', 'mode': ''}, 
+                               'Saturday': {'start': '', 'end': '', 'mode': ''}, 
+                               'Sunday': {'start': '', 'end': '', 'mode': ''}}}
 
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -734,25 +734,6 @@ async def revise(id_list: IDList):
 
                 calendar_call = await device_calendar(device)
                 parameters['report']['calendar'] = calendar_call
-
-                #Lines to remove keys if value == Okey
-                #erased_k = []
-                #for k, v in parameters.items():
-                #    if k == 'id' or k == 'status':
-                #        continue
-
-                #    if v == 'Okey':
-                #        erased_k.append(k)
-                #    elif v != 'Okey':
-                #        parameters['status'] = 'Error'
-
-                #for x in erased_k:
-                #    del parameters[x]
-
-                #This is to only return 'id' / 'status' fields if all correct
-                #if parameters['status'] == 'Okey':
-                #    correct_save = {'id', 'status'}
-                #    parameters = {k: v for k,v in parameters.items() if k in correct_save}
 
                 for v in parameters['report'].values():
                     if v != 'Okey':

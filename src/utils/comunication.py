@@ -19,7 +19,7 @@ class ISAPI:
                 return(req.text)
             else:
                 return(req)
-        
+
         #EXCEPCIONES
         except ConnectionError:
             raise DeviceConnectionError('Error: Connection Error')
@@ -39,11 +39,11 @@ class ISAPI:
                 return(req.text)
             else:
                 return(req)
-            
-        #EXCEPCIOENS
+
+            #EXCEPCIONES
         except Exception:
             raise HTTPException(status_code=404)
-        
+
 class OdooAPI:
     def __init__(self, url, db, username, password):
         self.url = url

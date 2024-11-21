@@ -11,7 +11,7 @@ class OdooTest:
         self.db = os.getenv('DB')
         self.user = os.getenv('USERNAME')
         self.key = os.getenv('PASSWORD')
-        self.erp = OdooAPI(self.url, self.db, self.user, self.key)         
+        self.erp = OdooAPI(self.url, self.db, self.user, self.key)
 
     def sys_read(self):
         req = self.erp.search('altatec.elemento', 'sistema_id', self.id)

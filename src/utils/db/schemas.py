@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List
 
 class Device(BaseModel):
@@ -11,8 +11,9 @@ class Device(BaseModel):
     port: int
     model: str
 
-    class Config:
-        from_attributes = True
+    Config: ConfigDict = {
+        'from_attributes': True
+    }
 
 class IDList(BaseModel):
     ids: List[int]

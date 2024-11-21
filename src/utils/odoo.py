@@ -10,15 +10,16 @@ class Odoo:
         self.db = os.getenv('DB')
         self.user = os.getenv('USERNAME')
         self.key = os.getenv('PASSWORD')
-        self.erp = OdooAPI(self.url, self.db, self.user, self.key)         
+        self.erp = OdooAPI(self.url, self.db, self.user, self.key)
 
     def element_ids(self): #Recive element ID and read the 'propiedad_ids' field
         req = self.erp.search('altatec.elemento', 'id', self.id)
         req_read = self.erp.read(req)
 
         fields = []
-        for field in req_read:
-            fields.append(field['propiedad_ids'])
+        if req_read is not None and isinstance(req_read, list):
+            for field in req_read:
+                fields.append(field['propiedad_ids'])
 
         return(fields)
 
@@ -31,7 +32,8 @@ class Odoo:
     def element_sys(self): #Return element asociated System ID
         req = self.erp.search('altatec.elemento', 'id', self.id)
         req_read = self.erp.read(req)
-        return(str(req_read[0]['sistema_id'][0])) #Change [0]['sistema_id'][0] to -> [0]['sistema_id'][1] in order to get systen name istead of ID
+        if req_read is not None and isinstance(req_read, list):
+            return(str(req_read[0]['sistema_id'][0])) #Change [0]['sistema_id'][0] to -> [0]['sistema_id'][1] in order to get systen name istead of ID
 
     def sys_req(self): #List of system content
         req = self.erp.search('altatec.elemento', 'sistema_id', self.id)

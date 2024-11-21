@@ -11,9 +11,9 @@ def device(id:int):
 
     #Read all property ID's
     for ids in properties_ids:
-    
+
         data = erp.element_data(ids)
-        if data is not None:
+        if data is not None and isinstance(data, list):
             #Read System from element
             sys_name = erp.element_sys()
 
@@ -45,7 +45,6 @@ def device(id:int):
                             'ip': device_data['DIRECCION IP'], 
                             'port': int(device_data['PUERTO HTTP']), 
                             'model': device_model}
-                #Make changes on the DB
                 return(new_device)
             else:
                 raise HTTPException(status_code=404, detail=f'Error on device: {id} - Device type not accepted {device_data['product_id']}')

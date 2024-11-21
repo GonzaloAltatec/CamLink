@@ -14,7 +14,7 @@ class Hikvision:
         self.api = ISAPI(self.ip, self.password)
         self.act_dir = Path(__file__).parent
         self.directory = f'{self.act_dir}/xml/{self.model}/'
-   
+
     #--------------------------------------------------------------------------
     #XML UTILS
     def remove_namespace(self, root, tree, namespace):
@@ -73,7 +73,7 @@ class Hikvision:
 
 
     #GET device name
-    def getname(self):      
+    def getname(self):
         req = ISAPI(f'http://{self.ip}/ISAPI/System/deviceInfo', self.password)
         response = str(req.getapi())
         root = ET.ElementTree(ET.fromstring(response))
@@ -84,7 +84,7 @@ class Hikvision:
         return(name_text)
  
     #GET device NTP
-    def getntp(self):       
+    def getntp(self):
         req = ISAPI(f'http://{self.ip}/ISAPI/System/time/ntpServers', self.password)
         response = str(req.getapi())
         root = ET.ElementTree(ET.fromstring(response)).getroot()
@@ -102,7 +102,7 @@ class Hikvision:
                 'sync': sync_text}
 
     #GET device DST
-    def getdst(self):       
+    def getdst(self):
         req = ISAPI(f'http://{self.ip}/ISAPI/System/time', self.password)
         response = str(req.getapi())
         root = ET.ElementTree(ET.fromstring(response)).getroot()
@@ -118,7 +118,7 @@ class Hikvision:
                 'timezone': time_text} 
 
     #GET device Security authentication type
-    def getsec(self):         
+    def getsec(self):
         web_req = ISAPI(f'http://{self.ip}/ISAPI/Security/webCertificate', self.password)
         web_response = str(web_req.getapi())
         web_root = ET.ElementTree(ET.fromstring(web_response))
@@ -138,10 +138,10 @@ class Hikvision:
                 cert_tag = sec_tag.find('ns:certificateType', self.namespace)
                 if cert_tag is not None:
                     rtsp_text = cert_tag.text
-        
+
         return {'web_sec': web_text,
                 'rtsp_sec': rtsp_text}
-   
+
     #GET device DNS Addresses
     def getdns(self):
         req = ISAPI(f'http://{self.ip}/ISAPI/System/Network/interfaces/1', self.password)
@@ -187,7 +187,7 @@ class Hikvision:
             name_tag = sender_tag.find('ns:name', self.namespace)
             if name_tag is not None:
                 name_text = name_tag.text
-            
+
             smtp_tag = sender_tag.find('ns:smtp', self.namespace)
             if smtp_tag is not None:
                 server_tag = smtp_tag.find('ns:hostName', self.namespace)    
@@ -250,7 +250,7 @@ class Hikvision:
                 plus_tag = codec_tag.find('ns:enabled', self.namespace)
                 if plus_tag is not None:
                     plus_text = plus_tag.text
-            
+
             #Width
             width_tag = video_tag.find('ns:videoResolutionWidth', self.namespace)
             if width_tag is not None:
@@ -270,7 +270,7 @@ class Hikvision:
             bitmin_tag = video_tag.find('ns:vbrAverageCap', self.namespace)
             if bitmin_tag is not None:
                 average_text = bitmin_tag.text
-            
+
             #FPS
             fps_tag = video_tag.find('ns:maxFrameRate', self.namespace)
             if fps_tag is not None:
@@ -309,7 +309,7 @@ class Hikvision:
             encoding_tag = video_tag.find('ns:videoCodecType', self.namespace)
             if encoding_tag is not None:
                 encoding_text = encoding_tag.text
-            
+
             #Width
             width_tag = video_tag.find('ns:videoResolutionWidth', self.namespace)
             if width_tag is not None:
@@ -357,7 +357,7 @@ class Hikvision:
         root = ET.ElementTree(ET.fromstring(response)).getroot()
         week_text = None
         format_text = None
-       
+
         #XML Root
         over_tag = root.find('ns:DateTimeOverlay', self.namespace)
         if over_tag is not None:
@@ -396,7 +396,7 @@ class Hikvision:
             sensitivity_tag = motion_tag.find('ns:sensitivityLevel', self.namespace)
             if sensitivity_tag is not None:
                 sensitivity_text = sensitivity_tag.text
-            
+
             #Target
             target_tag = motion_tag.find('ns:targetType', self.namespace)
             if target_tag is not None:
@@ -414,7 +414,7 @@ class Hikvision:
                 'grid': grid_text,
                 'sensitivity': sensitivity_text,
                 'target': target_text}
-    
+
     #GET Recording
     def getrecord(self):
         req = ISAPI(f'http://{self.ip}/ISAPI/Event/triggers/VMD-1', self.password)
@@ -431,7 +431,7 @@ class Hikvision:
                 id_tag = event_tag.find('ns:id', self.namespace)
                 if id_tag is not None:
                     target_text = id_tag.text
-                
+
                 #Method
                 method_tag = event_tag.find('ns:notificationMethod', self.namespace)
                 if method_tag is not None:
@@ -502,7 +502,7 @@ class Hikvision:
         req = ISAPI(f'http://{self.ip}/ISAPI/ContentMgmt/Storage/hdd', self.password)
         response = str(req.getapi())
         root = ET.ElementTree(ET.fromstring(response)).getroot()
-        capacity_text = None
+        #capacity_text = None
         state_text = None
 
         #Revisar esta variable. Puede cambiar según Firmware
@@ -513,16 +513,13 @@ class Hikvision:
         elif self.model == 'DS-2CD1143G2-IUF':
             xml_namespace = self.namespace
 
-
-
-
         hdd_tag = root.find('ns:hdd', xml_namespace)
         if hdd_tag is not None:
             #Formating Status
             state_tag = hdd_tag.find('ns:status', xml_namespace)
             if state_tag is not None:
                 state_text = state_tag.text
-            
+
             #SD Capacity
             #capacity_tag = hdd_tag.find('ns:capacity', xml_namespace)
             #if capacity_tag is not None:
@@ -535,7 +532,7 @@ class Hikvision:
         req = ISAPI(f'http://{self.ip}/ISAPI/ContentMgmt/record/tracks', self.password)
         response = str(req.getapi())
         root = ET.ElementTree(ET.fromstring(response)).getroot()
-        
+
         enabled_text = None
         pre_text = None
         post_text = None
@@ -573,7 +570,7 @@ class Hikvision:
                 if expiration_tag is not None:
                     expiration_text = expiration_tag.text
                 exp_flag = True
-                
+
             if not custom_flag:
                 #Schedule Enabled
                 custom_ext_lst = track_tag.find('ns:CustomExtensionList', self.namespace)
@@ -643,7 +640,7 @@ class Hikvision:
                              'mode': dict(mode_dict)}}
 
     #GET device S/N
-    def getsn(self):         
+    def getsn(self):
         req = ISAPI(f'http://{self.ip}/ISAPI/System/deviceInfo', self.password)
         response = str(req.getapi())
         root = ET.ElementTree(ET.fromstring(response))
@@ -692,7 +689,7 @@ class Hikvision:
         for osname in osd_root.iter(f'{self.xmlschema}name'):
             osname.text = f'{name}'
             osd_tree.write(f'{self.directory}osdcp.xml')
-        
+
         #Now we call to a function that removes the namespace from the XML file
         self.remove_namespace(osd_root, osd_tree, self.xmlschema)
         osd_tree.write(f'{self.directory}osdcp.xml')
@@ -702,7 +699,7 @@ class Hikvision:
             osd_xml = f.read()
             f.close()
         osd_conf = osd_req.putapi(osd_xml)
-        
+
         #Change overlay settings (Date Format and Hide Week)
         over_req = ISAPI(f'http://{self.ip}/ISAPI/System/Video/inputs/channels/1/overlays', self.password)
         with open(f'{self.directory}overlay.xml', 'r') as f:
