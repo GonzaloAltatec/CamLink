@@ -47,3 +47,11 @@ jobs:
       # 6. Limpia el contenedor
       - name: Cleanup
         run: docker rm -f camlink-container
+
+      # 7. Inicia sesión en GitHub Packages
+      - name: Log in to GitHub Docker Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # 8. Publica la imagen en GitHub Packages
+      - name: Push Docker Image to GitHub Packages
+        run: docker push ghcr.io/${{ github.repository }}/camlink:latest
