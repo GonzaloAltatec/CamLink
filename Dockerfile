@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copia el código de la aplicación al contenedor
 COPY . .
 
-# Expone el puerto en el que FastAPI escuchará (puerto 80 en este ejemplo)
+# Expone el puerto en el que FastAPI escuchará (puerto 8000 en este ejemplo)
 EXPOSE 8000
 
 # Comando para ejecutar el servidor Uvicorn
