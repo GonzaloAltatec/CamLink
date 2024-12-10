@@ -6,16 +6,16 @@ from ..odoo import Odoo
 # Model type created on execution
 def device(id: int):
     # Send element ID to Odoo Class
-    erp = Odoo(id)
+    erp = Odoo()
     # Get element properties
-    properties_ids = erp.element_ids()
+    properties_ids = erp.element_ids(id)
 
     # Read all property ID's
     for ids in properties_ids:
         data = erp.element_data(ids)
         if data is not None and isinstance(data, list):
             # Read System from element
-            sys_name = erp.element_sys()
+            sys_name = erp.element_sys(id)
 
             # Creating a list for key-value pairs
             key_lst = []
@@ -48,10 +48,11 @@ def device(id: int):
                     "ip": device_data["DIRECCION IP"],
                     "port": int(device_data["PUERTO HTTP"]),
                     "model": device_model,
+                    "conf": "",
                 }
                 return new_device
             else:
                 raise HTTPException(
                     status_code=404,
-                    detail=f'Error on device: {id} - Device type not accepted {device_data['product_id']}',
+                    detail=f"Error on device: {id} - Device type not accepted {device_data['product_id']}",
                 )

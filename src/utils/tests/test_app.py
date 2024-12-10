@@ -3,8 +3,9 @@ from src.main import app
 
 client = TestClient(app)
 
-#Testing root endpoint response
+
+# Testing root endpoint response
 def test_root():
-    response = client.get('/')
+    response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {'details': 'API Online'}
+    assert response.json() == {"details": "API Online"}
