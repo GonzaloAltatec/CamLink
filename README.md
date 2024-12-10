@@ -19,8 +19,8 @@
     Automated tool for configuration and revision of CCTV devices
     <br />
     <a href="https://github.com/GonzaloAltatec/CamLink"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
+    <br/>
+    <br/>
     <a href="https://github.com/GonzaloAltatec/CamLink">View Demo</a>
     ·
     <a href="https://github.com/GonzaloAltatec/CamLink/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
