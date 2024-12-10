@@ -41,7 +41,9 @@ jobs:
       - name: Run Docker Container
         run: |
           docker run -d -p 8000:8000 --name camlink-container ghcr.io/gonzaloaltatec/camlink/camlink:latest
-          sleep 10  # Espera a que el servicio se inicie
+          docker logs camlink-container
+          docker ps -a
+          sleep 15  # Espera a que el servicio se inicie
           curl --fail http://localhost:8000/ || exit 1
 
       # 6. Limpia el contenedor
