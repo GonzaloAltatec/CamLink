@@ -1,13 +1,9 @@
-#FastAPI imports
+# FastAPI imports
 from fastapi import APIRouter, status
-#Event logger
+
+# Event logger
 import logging
 
 logging.basicConfig(level=logging.ERROR)
 
-router = APIRouter(
-    tags=['health'],
-    prefix='/health'
-)
-
-
+router = APIRouter(tags=["health"], prefix="/health")

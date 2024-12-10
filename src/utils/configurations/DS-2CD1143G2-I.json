@@ -1,0 +1,113 @@
+{
+  "ntp": {
+    "server": "es.pool.ntp.org",
+    "sync": "60"
+  },
+  "dst": {
+    "mode": "NTP",
+    "timezone": "CST-1:00:00DST01:00:00,M3.5.0/02:00:00,M10.5.0/03:00:00"
+  },
+  "security": {
+    "web": "digest/basic",
+    "rtsp": "digest/basic"
+  },
+  "dns": {
+    "primary": "8.8.8.8",
+    "secondary": "8.8.4.4"
+  },
+  "mail": {
+    "sender": "La4567@altateclabs.com",
+    "server": "smtp.altateclabs.com",
+    "port": "9267",
+    "receiver": "Email Soporte",
+    "email": "soporte@altatec-seguridad.com"
+  },
+  "mstream": {
+    "encoding": "H.265",
+    "plus": "true",
+    "width": "2560",
+    "height": "1440",
+    "bitrate": "3072",
+    "average": "1536",
+    "fps": "2000"
+  },
+  "sstream": {
+    "encoding": "H.265",
+    "width": "640",
+    "height": "480",
+    "bitrate": "512",
+    "fps": "1200"
+  },
+  "overlays": {
+    "week": "false",
+    "format": "DD-MM-YYYY"
+  },
+  "motion": {
+    "enabled": "true",
+    "grid": "fffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffc",
+    "sensitivity": "80",
+    "target": "human,vehicle"
+  },
+  "record": {
+    "target": "record-1",
+    "method": "record"
+  },
+  "exceptions": {
+    "disk": "email",
+    "login": "email"
+  },
+  "quota": {
+    "picture": "1",
+    "video": "99"
+  },
+  "sd": {
+    "capacity": "121942",
+    "state": "ok"
+  },
+  "calendar": {
+    "enabled": "true",
+    "advanced": {
+      "overwrite": "true",
+      "prerecord": "10",
+      "postrecord": "10",
+      "expiration": "true"
+    },
+    "schedule": {
+      "Monday": {
+        "start": "00:00:00",
+        "end": "24:00",
+        "mode": "MOTION"
+      },
+      "Tuesday": {
+        "start": "00:00:00",
+        "end": "24:00",
+        "mode": "MOTION"
+      },
+      "Wednesday": {
+        "start": "00:00:00",
+        "end": "24:00",
+        "mode": "MOTION"
+      },
+      "Thursday": {
+        "start": "00:00:00",
+        "end": "24:00",
+        "mode": "MOTION"
+      },
+      "Friday": {
+        "start": "00:00:00",
+        "end": "24:00",
+        "mode": "MOTION"
+      },
+      "Saturday": {
+        "start": "00:00:00",
+        "end": "24:00",
+        "mode": "MOTION"
+      },
+      "Sunday": {
+        "start": "00:00:00",
+        "end": "24:00",
+        "mode": "MOTION"
+      }
+    }
+  }
+}
