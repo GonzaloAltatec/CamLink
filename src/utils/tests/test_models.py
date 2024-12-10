@@ -32,6 +32,7 @@ def test_device_okey(mocker):
         "ip": "192.215.200.16",
         "port": 80,
         "model": "DS-2CD2183G2-IU",
+        "conf": "",
     }
 
     assert result == expected
