@@ -41,19 +41,31 @@ jobs:
       - name: Run Docker Container
         run: |
           docker run -d -p 8000:8000 --name camlink-container ghcr.io/gonzaloaltatec/camlink/camlink:latest
-          docker logs camlink-container
-          docker ps -a
           sleep 15  # Espera a que el servicio se inicie
-          curl --fail http://localhost:8000/ || exit 1
+          for i in {1..10}; do
+            curl --fail http://localhost:8000/ && exit 0 || echo "Retrying..."
+            sleep 3
+          done
+          exit 1
 
-      # 6. Limpia el contenedor
+      # 6. Revisión de contenedores y logs para depuración
+      - name: Inspect Docker Containers
+        if: failure()
+        run: docker ps -a
+
+      - name: Debug Docker Logs
+        if: failure()
+        run: docker logs camlink-container
+
+      # 7. Limpia el contenedor
       - name: Cleanup
         run: docker rm -f camlink-container
 
-      # 7. Inicia sesión en GitHub Packages
+      # 8. Inicia sesión en GitHub Packages
       - name: Log in to GitHub Docker Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # 8. Publica la imagen en GitHub Packages
+      # 9. Publica la imagen en GitHub Packages
       - name: Push Docker Image to GitHub Packages
+        if: success()
         run: docker push ghcr.io/gonzaloaltatec/camlink/camlink:latest
