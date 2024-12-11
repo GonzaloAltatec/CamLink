@@ -20,6 +20,7 @@ from ..utils.odoo import Odoo
 
 # Event logger
 import logging
+import inspect
 
 logging.basicConfig(level=logging.ERROR)
 router = APIRouter(tags=["reviser"], prefix="/revise")
@@ -46,7 +47,6 @@ async def device_ntp(device: dict):
 
     parameters = {"status": "", "server": "", "sync": ""}
 
-    # NTP server check (Default: es.pool.ntp.org)
     if data["server"] != conf["ntp"]["server"]:
         parameters["status"] = "Error"
         parameters["server"] = (
@@ -811,7 +811,7 @@ async def revise(id_list: IDList):
                         "dst": {},
                         "security": {},
                         "dns": {},
-                        "email": {},
+                        "mail": {},
                         "mstream": {},
                         "sstream": {},
                         "osd": {},
@@ -819,7 +819,7 @@ async def revise(id_list: IDList):
                         "motion": {},
                         "record": {},
                         "sderror": {},
-                        "illaccess": {},
+                        "access": {},
                         "quota": {},
                         "sd": {},
                         "calendar": {},
@@ -828,61 +828,52 @@ async def revise(id_list: IDList):
 
                 parameters["id"] = str(id)
 
-                name_call = await device_name(device)
-                parameters["report"]["name"] = name_call
+                # Module reading
+                current_module = inspect.getmodule(inspect.currentframe())
+                functions = dict(
+                    inspect.getmembers(current_module, inspect.iscoroutinefunction)
+                )
 
-                ntp_call = await device_ntp(device)
-                parameters["report"]["ntp"] = ntp_call
+                # Listing function names
+                excecution_order = [
+                    "device_name",
+                    "device_ntp",
+                    "device_dst",
+                    "device_security",
+                    "device_dns",
+                    "device_mail",
+                    "device_mstream",
+                    "device_sstream",
+                    "device_osd",
+                    "device_overlay",
+                    "device_motion",
+                    "device_record",
+                    "device_sderror",
+                    "device_access",
+                    "device_quota",
+                    "device_sd",
+                    "device_calendar",
+                ]
 
-                dst_call = await device_dst(device)
-                parameters["report"]["dst"] = dst_call
+                # Loop to execute all functions inside this module
+                for func_name in excecution_order:
+                    if func_name in functions:
+                        result = await functions[func_name](device)
+                        key = func_name.split("_")[1]
+                        if key in parameters["report"]:
+                            parameters["report"][key] = result
 
-                security_call = await device_security(device)
-                parameters["report"]["security"] = security_call
-
-                dns_call = await device_dns(device)
-                parameters["report"]["dns"] = dns_call
-
-                email_call = await device_mail(device)
-                parameters["report"]["email"] = email_call
-
-                mstream_call = await device_mstream(device)
-                parameters["report"]["mstream"] = mstream_call
-
-                sstream_call = await device_sstream(device)
-                parameters["report"]["sstream"] = sstream_call
-
-                osd_call = await device_osd(device)
-                parameters["report"]["osd"] = osd_call
-
-                overlay_call = await device_overlay(device)
-                parameters["report"]["overlay"] = overlay_call
-
-                motion_call = await device_motion(device)
-                parameters["report"]["motion"] = motion_call
-
-                record_call = await device_record(device)
-                parameters["report"]["record"] = record_call
-
-                sderror_call = await device_sderror(device)
-                parameters["report"]["sderror"] = sderror_call
-
-                illaccess_call = await device_access(device)
-                parameters["report"]["illaccess"] = illaccess_call
-
-                quota_call = await device_quota(device)
-                parameters["report"]["quota"] = quota_call
-
-                sd_call = await device_sd(device)
-                parameters["report"]["sd"] = sd_call
-
-                calendar_call = await device_calendar(device)
-                parameters["report"]["calendar"] = calendar_call
-
+                # Set status to error if something fails
                 for v in parameters["report"].values():
                     if v != "Okey":
                         parameters["status"] = "Error"
 
+                # Add to details sections that has errors
+                for k, v in parameters["report"].items():
+                    if v != "Okey" and k != "status":
+                        parameters["details"].append(f"{k} error")
+
+                # Set details to Okey if all is correct
                 if parameters["status"] == "Okey":
                     parameters["details"] = "Correct device configuration"
 

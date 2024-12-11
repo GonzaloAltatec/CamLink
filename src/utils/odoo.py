@@ -1,5 +1,6 @@
 from .comunication import OdooAPI
 from dotenv import load_dotenv
+import json
 import os
 
 load_dotenv(override=True)
@@ -49,4 +50,10 @@ class Odoo:
         req = self.erp.search("altatec.revisor.template", "name", model)
         read_req = self.erp.read(req)
         if read_req is not None and isinstance(read_req, list):
-            return read_req[0]["code"]
+            req_list = read_req[0]
+            if "code" in req_list:
+                try:
+                    req_list["code"] = json.loads(req_list["code"])
+                    return read_req[0]["code"]
+                except json.JSONDecodeError as e:
+                    print(f"JSON Decoding error: {e}")
