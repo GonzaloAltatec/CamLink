@@ -1,5 +1,5 @@
 # FastAPI imports
-from fastapi import APIRouter, status
+from fastapi import APIRouter
 
 # Event logger
 import logging
