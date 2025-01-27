@@ -22,3 +22,13 @@ async def device_name(id_list: IDList):
             api = Hik(device["ip"], device["password"])
             conf = api.putname(device["name"])
             return conf
+
+
+@router.post("/time", status_code=status.HTTP_200_OK)
+async def device_time(id_list: IDList):
+    for id in id_list.ids:
+        device = models.device(id)
+        if device != "Error" and device is not None:
+            api = Hik(device["ip"], device["password"])
+            conf = api.putime()
+            return conf
