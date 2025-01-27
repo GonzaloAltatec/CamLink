@@ -32,3 +32,13 @@ async def device_time(id_list: IDList):
             api = Hik(device["ip"], device["password"])
             conf = api.putime()
             return conf
+
+
+@router.post("/osd", status_code=status.HTTP_200_OK)
+async def device_osd(id_list: IDList):
+    for id in id_list.ids:
+        device = models.device(id)
+        if device != "Error" and device is not None:
+            api = Hik(device["ip"], device["password"])
+            conf = api.putosd(device["name"])
+            return conf
