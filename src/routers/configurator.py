@@ -13,7 +13,7 @@ router = APIRouter(tags=["configurator"], prefix="/configure")
 
 async def device_dict(id):
     device = models.device(id)
-    if device != "Error" and device is not None:
+    if device != "Error" and device is not None and isinstance(device, dict):
         return device
 
 
@@ -44,4 +44,14 @@ async def device_osd(id_list: IDList):
         if device is not None and isinstance(device, dict):
             api = Hik(device["ip"], device["password"])
             conf = api.putosd(device["name"])
+            return conf
+
+
+@router.post("/mail", status_code=status.HTTP_200_OK)
+async def device_mail(id_list: IDList):
+    for id in id_list.ids:
+        device = await device_dict(id)
+        if device is not None and isinstance(device, dict):
+            api = Hik(device["ip"], device["password"])
+            conf = api.putmail(device["name"], device["installation"])
             return conf

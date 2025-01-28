@@ -819,7 +819,7 @@ class Hikvision:
         over_conf = over_req.putapi(over_xml)
         return (osd_conf, over_conf)
 
-    def putmail(self, name, sys_name):  # Modify mail configurations
+    def putmail(self, name, sys_id):  # Modify mail configurations
         req = ISAPI(f"http://{self.ip}/ISAPI/System/network/mailing/1", self.password)
 
         tree = ET.parse(f"{self.directory}mail.xml")
@@ -827,7 +827,7 @@ class Hikvision:
 
         for parent in root.iter(f"{self.xmlschema}sender"):
             for sender in parent.iter(f"{self.xmlschema}name"):
-                sender.text = f"{name} {sys_name}"
+                sender.text = f"{name} {sys_id}"
                 tree.write(f"{self.directory}mailcp.xml")
 
         self.remove_namespace(root, tree, self.xmlschema)
