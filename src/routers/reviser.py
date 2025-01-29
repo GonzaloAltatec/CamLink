@@ -758,33 +758,50 @@ async def device_calendar(device: dict):
 
     # Start Time
     for day in days:
-        if data["schedule"]["start"][day] != conf["calendar"]["schedule"][day]["start"]:
+        try:
+            if (
+                data["schedule"]["start"][day]
+                != conf["calendar"]["schedule"][day]["start"]
+            ):
+                parameters["status"] = "Error"
+                parameters["schedule"][day]["start"] = (
+                    f"Start {day} time: [{data['schedule']['start'][day]}]. Correct {day} start time: [{conf['calendar']['schedule'][day]['start']}]"
+                )
+            else:
+                parameters["schedule"][day]["start"] = "Okey"
+        except KeyError:
             parameters["status"] = "Error"
-            parameters["schedule"][day]["start"] = (
-                f"Start {day} time: [{data['schedule']['start'][day]}]. Correct {day} start time: [{conf['calendar']['schedule'][day]['start']}]"
-            )
-        else:
-            parameters["schedule"][day]["start"] = "Okey"
+            parameters["schedule"][day]["start"] = f"No start time on {day}"
 
     # End Time
     for day in days:
-        if data["schedule"]["end"][day] != conf["calendar"]["schedule"][day]["end"]:
+        try:
+            if data["schedule"]["end"][day] != conf["calendar"]["schedule"][day]["end"]:
+                parameters["status"] = "Error"
+                parameters["schedule"][day]["end"] = (
+                    f"End {day} time: [{data['schedule']['end'][day]}]. Correct {day} end time: [{conf['calendar']['schedule'][day]['end']}]"
+                )
+            else:
+                parameters["schedule"][day]["end"] = "Okey"
+        except KeyError:
             parameters["status"] = "Error"
-            parameters["schedule"][day]["end"] = (
-                f"End {day} time: [{data['schedule']['end'][day]}]. Correct {day} end time: [{conf['calendar']['schedule'][day]['end']}]"
-            )
-        else:
-            parameters["schedule"][day]["end"] = "Okey"
-
+            parameters["schedule"][day]["end"] = f"No end time on {day}"
     # Mode
     for day in days:
-        if data["schedule"]["mode"][day] != conf["calendar"]["schedule"][day]["mode"]:
+        try:
+            if (
+                data["schedule"]["mode"][day]
+                != conf["calendar"]["schedule"][day]["mode"]
+            ):
+                parameters["status"] = "Error"
+                parameters["schedule"][day]["mode"] = (
+                    f"Record {day} mode: [{data['schedule']['mode'][day]}]. Correct {day} mode: [{conf['calendar']['schedule'][day]['mode']}]"
+                )
+            else:
+                parameters["schedule"][day]["mode"] = "Okey"
+        except KeyError:
             parameters["status"] = "Error"
-            parameters["schedule"][day]["mode"] = (
-                f"Record {day} mode: [{data['schedule']['mode'][day]}]. Correct {day} mode: [{conf['calendar']['schedule'][day]['mode']}]"
-            )
-        else:
-            parameters["schedule"][day]["mode"] = "Okey"
+            parameters["schedule"][day]["mode"] = f"No mode selected on {day}"
 
     if parameters["status"] == "Error":
         return parameters
