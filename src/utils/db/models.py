@@ -15,7 +15,7 @@ def device(id: int):
         data = erp.element_data(ids)
         if data is not None and isinstance(data, list):
             # Read System from element
-            sys_name = erp.element_sys(id)
+            sys_id = erp.element_sys(id)
 
             # Creating a list for key-value pairs
             key_lst = []
@@ -42,7 +42,7 @@ def device(id: int):
                 new_device = {
                     "id": id,
                     "name": device_data["NOMBRE"],
-                    "installation": sys_name,
+                    "installation": sys_id,
                     "user": device_data["USUARIO"],
                     "password": device_data["PASSWORD"],
                     "ip": device_data["DIRECCION IP"],
