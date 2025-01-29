@@ -11,12 +11,14 @@ from src.utils.operations import Hikvision as Hik
 router = APIRouter(tags=["configurator"], prefix="/configure")
 
 
+# Get device info as dictionary
 async def device_dict(id):
     device = models.device(id)
     if device != "Error" and device is not None and isinstance(device, dict):
         return device
 
 
+# Configure device name
 @router.post("/name", status_code=status.HTTP_200_OK)
 async def device_name(id_list: IDList):
     for id in id_list.ids:
@@ -27,6 +29,7 @@ async def device_name(id_list: IDList):
             return conf
 
 
+# Configure device time and DST operations
 @router.post("/time", status_code=status.HTTP_200_OK)
 async def device_time(id_list: IDList):
     for id in id_list.ids:
@@ -37,6 +40,7 @@ async def device_time(id_list: IDList):
             return conf
 
 
+# Configure OSD
 @router.post("/osd", status_code=status.HTTP_200_OK)
 async def device_osd(id_list: IDList):
     for id in id_list.ids:
@@ -47,6 +51,7 @@ async def device_osd(id_list: IDList):
             return conf
 
 
+# Configure mail data
 @router.post("/mail", status_code=status.HTTP_200_OK)
 async def device_mail(id_list: IDList):
     for id in id_list.ids:
@@ -54,4 +59,15 @@ async def device_mail(id_list: IDList):
         if device is not None and isinstance(device, dict):
             api = Hik(device["ip"], device["password"])
             conf = api.putmail(device["name"], device["installation"])
+            return conf
+
+
+# Configure security options
+@router.post("/security", status_code=status.HTTP_200_OK)
+async def device_security(id_list: IDList):
+    for id in id_list.ids:
+        device = await device_dict((id))
+        if device is not None and isinstance(device, dict):
+            api = Hik(device["ip"], device["password"])
+            conf = api.putsec()
             return conf
