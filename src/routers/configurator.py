@@ -66,8 +66,19 @@ async def device_mail(id_list: IDList):
 @router.post("/security", status_code=status.HTTP_200_OK)
 async def device_security(id_list: IDList):
     for id in id_list.ids:
-        device = await device_dict((id))
+        device = await device_dict(id)
         if device is not None and isinstance(device, dict):
             api = Hik(device["ip"], device["password"])
             conf = api.putsec()
+            return conf
+
+
+# Configure Network settings
+@router.post("network", status_code=status.HTTP_200_OK)
+async def device_network(id_list: IDList):
+    for id in id_list.ids:
+        device = await device_dict(id)
+        if device is not None and isinstance(device, dict):
+            api = Hik(device["ip"], device["password"])
+            conf = api.putnet()
             return conf

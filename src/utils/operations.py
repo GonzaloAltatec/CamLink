@@ -840,24 +840,6 @@ class Hikvision:
         config = req.putapi(data_xml)
         return config
 
-    def sd_formatter(self):  # Format camera SD card
-        # Establish the image/video quota
-        quota_req = ISAPI(
-            f"http://{self.ip}/ISAPI/ContentMgmt/Storage/quota", self.password
-        )
-        with open(f"{self.directory}quota.xml", "r") as f:
-            quota_xml = f.read()
-            f.close()
-        quota_conf = quota_req.putapi(quota_xml)
-
-        # Format the card
-        format_req = ISAPI(
-            f'http://{self.ip}/ISAPI/ContentMgmt/Storage/hdd/1/format?formatType="EXT4"',
-            self.password,
-        )
-        format_conf = format_req.putapi("")
-        return (quota_conf, format_conf)
-
     def putsec(self):  # Configure "Security" settings
         websec_req = ISAPI(
             f"http://{self.ip}/ISAPI/Security/webCertificate", self.password
@@ -1035,6 +1017,24 @@ class Hikvision:
         sch_conf = sch_req.putapi(sch_xml)
 
         return sch_conf
+
+    def sd_formatter(self):  # Format camera SD card
+        # Establish the image/video quota
+        quota_req = ISAPI(
+            f"http://{self.ip}/ISAPI/ContentMgmt/Storage/quota", self.password
+        )
+        with open(f"{self.directory}quota.xml", "r") as f:
+            quota_xml = f.read()
+            f.close()
+        quota_conf = quota_req.putapi(quota_xml)
+
+        # Format the card
+        format_req = ISAPI(
+            f'http://{self.ip}/ISAPI/ContentMgmt/Storage/hdd/1/format?formatType="EXT4"',
+            self.password,
+        )
+        format_conf = format_req.putapi("")
+        return (quota_conf, format_conf)
 
     def upfirmware(self):  # Firmware Updater
         # Check camera Firmware version
