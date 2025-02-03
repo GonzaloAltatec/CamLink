@@ -74,7 +74,7 @@ async def device_security(id_list: IDList):
 
 
 # Configure Network settings
-@router.post("network", status_code=status.HTTP_200_OK)
+@router.post("/network", status_code=status.HTTP_200_OK)
 async def device_network(id_list: IDList):
     for id in id_list.ids:
         device = await device_dict(id)
@@ -82,3 +82,16 @@ async def device_network(id_list: IDList):
             api = Hik(device["ip"], device["password"])
             conf = api.putnet()
             return conf
+
+
+# Configure Video settings
+@router.post("/video", status_code=status.HTTP_200_OK)
+async def device_video(id_list: IDList):
+    for id in id_list.ids:
+        device = await device_dict(id)
+        conf_status = []
+        if device is not None and isinstance(device, dict):
+            api = Hik(device["ip"], device["password"])
+            conf = api.putvideo(device["name"])
+            conf_status.append(conf)
+        return conf_status

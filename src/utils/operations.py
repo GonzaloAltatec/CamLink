@@ -761,8 +761,8 @@ class Hikvision:
     def putname(self, name):  # Modify camera name
         req = ISAPI(f"http://{self.ip}/ISAPI/System/deviceInfo", self.password)
         data = f"<deviceName>{name}</deviceName>"
-        parameter = req.putapi(data)
-        return parameter
+        conf = req.putapi(data)
+        return {"name": str(conf)}
 
     def putime(self):  # Configure "Time Settings"
         # NTP Configuration
@@ -781,7 +781,8 @@ class Hikvision:
 
         # Time request
         h_req = ISAPI(f"http://{self.ip}/ISAPI/System/time/localTime", self.password)
-        return h_req.getapi()
+        conf = h_req.getapi()
+        return {"time": str(conf)}
 
     def putosd(self, name):  # Modifiy OSD
         # Change OSD name
@@ -817,7 +818,7 @@ class Hikvision:
             over_xml = f.read()
             f.close()
         over_conf = over_req.putapi(over_xml)
-        return (osd_conf, over_conf)
+        return {"osd": str(osd_conf), "overlay": str(over_conf)}
 
     def putmail(self, name, sys_id):  # Modify mail configurations
         req = ISAPI(f"http://{self.ip}/ISAPI/System/network/mailing/1", self.password)
@@ -838,7 +839,7 @@ class Hikvision:
             f.close()
 
         config = req.putapi(data_xml)
-        return config
+        return {"mail": str(config)}
 
     def putsec(self):  # Configure "Security" settings
         websec_req = ISAPI(
@@ -857,7 +858,7 @@ class Hikvision:
             f.close()
         rtsp_conf = rtspsec_req.putapi(rtspsec_xml)
 
-        return (websec_conf, rtsp_conf)
+        return {"web": str(websec_conf), "rtsp": str(rtsp_conf)}
 
     def putnet(self):  # DNS Configuration
         # Discovery Mode configuration
@@ -912,7 +913,7 @@ class Hikvision:
 
         dns_conf = dns_req.putapi(dns_xml)
 
-        return (discmode_conf, dns_conf)
+        return {"discovery": str(discmode_conf), "dns": str(dns_conf)}
 
     def putvideo(self, name):  # Configure video parameters
         # Configure Main-Stream video
@@ -955,7 +956,7 @@ class Hikvision:
 
         subvid_conf = subvid_req.putapi(subvid_xml)
 
-        return (mainvid_conf, subvid_conf)
+        return {"main_video": str(mainvid_conf), "sub_video": str(subvid_conf)}
 
     def putevents(self):  # Configure Motion Detection and Exceptions
         # Motion Detection

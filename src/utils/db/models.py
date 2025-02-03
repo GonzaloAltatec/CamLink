@@ -30,7 +30,7 @@ def device(id: int):
             device_data = dict(zip(key_lst, val_lst))
 
             # Conditional to ensure device it's compatible with CamLink operations
-            if device_data["product_id"] == "CVCCV" or "CVKP1" or "CVKP2" or "CVCSG":
+            if device_data["PRODUCT_ID"] == "CVCCV" or "CVKP1" or "CVKP2" or "CVCSG":
                 # Requesting device model
                 conf = Hik(device_data["DIRECCION IP"], device_data["PASSWORD"])
                 device_model = conf.getmodel()
