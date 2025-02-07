@@ -969,6 +969,16 @@ class Hikvision:
             f.close()
         motion_conf = motion_req.putapi(motion_xml)
 
+        # Motion Detection Schedule
+        schedule_req = ISAPI(
+            f"http://{self.ip}/ISAPI/Event/schedules/motionDetections/VMD_video1",
+            self.password,
+        )
+        with open(f"{self.directory}schtrigger.xml", "r") as f:
+            schedule_xml = f.read()
+            f.close()
+        schedule_conf = schedule_req.putapi(schedule_xml)
+
         # Motion Recording Trigger
         trigger_req = ISAPI(
             f"http://{self.ip}/ISAPI/Event/triggers/VMD-1", self.password
@@ -978,6 +988,9 @@ class Hikvision:
             f.close()
         trigger_conf = trigger_req.putapi(trigger_xml)
 
+        return (motion_conf, trigger_conf, schedule_conf)
+
+    def putexcepts(self):
         # HDD Error Exception
         hddexcep_req = ISAPI(
             f"http://{self.ip}/ISAPI/Event/triggers/diskerror", self.password
@@ -996,17 +1009,7 @@ class Hikvision:
             f.close()
         logexcep_conf = logexcep_req.putapi(logexcep_xml)
 
-        # Motion Detection Schedule
-        schedule_req = ISAPI(
-            f"http://{self.ip}/ISAPI/Event/schedules/motionDetections/VMD_video1",
-            self.password,
-        )
-        with open(f"{self.directory}schtrigger.xml", "r") as f:
-            schedule_xml = f.read()
-            f.close()
-        schedule_conf = schedule_req.putapi(schedule_xml)
-
-        return (motion_conf, trigger_conf, schedule_conf, hddexcep_conf, logexcep_conf)
+        return (hddexcep_conf, logexcep_conf)
 
     def putschedule(self):  # Configure recording calendar
         sch_req = ISAPI(
