@@ -108,3 +108,16 @@ async def device_event(id_list: IDList):
             conf = api.putevents()
             conf_status.append(conf)
         return conf_status
+
+
+# Configure Exception settings
+@router.post("/exception", status_code=status.HTTP_200_OK)
+async def device_exception(id_list: IDList):
+    for id in id_list.ids:
+        device = await device_dict(id)
+        conf_status = []
+        if device is not None and isinstance(device, dict):
+            api = Hik(device["ip"], device["password"])
+            conf = api.putexcepts()
+            conf_status.append(conf)
+        return conf_status
