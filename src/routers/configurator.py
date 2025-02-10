@@ -8,6 +8,7 @@ from src.utils.db.schemas import IDList
 # Hikvision API operator
 from src.utils.operations import Hikvision as Hik
 
+# Router endpoint definition
 router = APIRouter(tags=["configurator"], prefix="/configure")
 
 
