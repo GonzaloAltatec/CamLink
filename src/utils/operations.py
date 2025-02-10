@@ -1040,50 +1040,50 @@ class Hikvision:
         format_conf = format_req.putapi("")
         return (quota_conf, format_conf)
 
-    def upfirmware(self):  # Firmware Updater
-        # Check camera Firmware version
-        req = ISAPI(f"http://{self.ip}/ISAPI/System/deviceInfo", self.password)
-        req_get = req.getapi()
-        root = ET.fromstring(req_get.text)
+    # def upfirmware(self):  # Firmware Updater
+    #    # Check camera Firmware version
+    #    req = ISAPI(f"http://{self.ip}/ISAPI/System/deviceInfo", self.password)
+    #    req_get = req.getapi()
+    #    root = ET.fromstring(req_get.text)
 
-        for x in root.iter(f"{self.xmlschema}firmwareVersion"):
-            version = x.text
+    #    for x in root.iter(f"{self.xmlschema}firmwareVersion"):
+    #        version = x.text
 
-        # Check local Firmware
-        local_version_file = open(
-            f"{self.act_dir}/firmwares/{self.model}/Version.txt", "r"
-        )
-        for ver in local_version_file.readlines():
-            local_version_list = ver.split(".")
+    #    # Check local Firmware
+    #    local_version_file = open(
+    #        f"{self.act_dir}/firmwares/{self.model}/Version.txt", "r"
+    #    )
+    #    for ver in local_version_file.readlines():
+    #        local_version_list = ver.split(".")
 
-        cam_ver_str = version.replace("V", "")
-        cam_ver_list = cam_ver_str.split(".")
+    #    cam_ver_str = version.replace("V", "")
+    #    cam_ver_list = cam_ver_str.split(".")
 
-        up_req = ISAPI(f"http://{self.ip}/ISAPI/System/updateFirmware", self.password)
+    #    up_req = ISAPI(f"http://{self.ip}/ISAPI/System/updateFirmware", self.password)
 
-        with open(f"{self.act_dir}/firmwares/{self.model}/digicap.dav", "rb") as f:
-            firmware = f.read()
-            f.close()
+    #    with open(f"{self.act_dir}/firmwares/{self.model}/digicap.dav", "rb") as f:
+    #        firmware = f.read()
+    #        f.close()
 
-        if cam_ver_list[0] < local_version_list[0]:
-            up_req.putapi(firmware)
-            return "Actualizando..."
-        elif cam_ver_list[0] > local_version_list[0]:
-            return "NUEVO FIRMWARE!!!"
-        elif cam_ver_list[0] == local_version_list[0]:
-            if cam_ver_list[1] < local_version_list[1]:
-                up_req.putapi(firmware)
-                return "Actualizando..."
-            elif cam_ver_list[1] > local_version_list[1]:
-                return "NUEVO FIRMWARE!!!"
-            elif cam_ver_list[1] == local_version_list[1]:
-                if cam_ver_list[2] < local_version_list[2]:
-                    up_req.putapi(firmware)
-                    return "Actualizando..."
-                elif cam_ver_list[2] > local_version_list[2]:
-                    return "NUEVO FIRMWARE!!!"
-                elif cam_ver_list[2] == local_version_list[2]:
-                    return "FIRMWARE ACTUALIZADO"
+    #    if cam_ver_list[0] < local_version_list[0]:
+    #        up_req.putapi(firmware)
+    #        return "Actualizando..."
+    #    elif cam_ver_list[0] > local_version_list[0]:
+    #        return "NUEVO FIRMWARE!!!"
+    #    elif cam_ver_list[0] == local_version_list[0]:
+    #        if cam_ver_list[1] < local_version_list[1]:
+    #            up_req.putapi(firmware)
+    #            return "Actualizando..."
+    #        elif cam_ver_list[1] > local_version_list[1]:
+    #            return "NUEVO FIRMWARE!!!"
+    #        elif cam_ver_list[1] == local_version_list[1]:
+    #            if cam_ver_list[2] < local_version_list[2]:
+    #                up_req.putapi(firmware)
+    #                return "Actualizando..."
+    #            elif cam_ver_list[2] > local_version_list[2]:
+    #                return "NUEVO FIRMWARE!!!"
+    #            elif cam_ver_list[2] == local_version_list[2]:
+    #                return "FIRMWARE ACTUALIZADO"
 
     def reboot(self):  # Camera Reboot
         req = ISAPI(f"http://{self.ip}/ISAPI/System/reboot", self.password)
@@ -1102,7 +1102,7 @@ class Hikvision:
             self.putschedule()
             self.putosd(name)
             self.sd_formatter()
-            self.upfirmware()
+            # self.upfirmware()
             self.reboot()
             return f"Configurada camara {name}"
         except Exception as e:
