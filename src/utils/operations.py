@@ -988,7 +988,11 @@ class Hikvision:
             f.close()
         trigger_conf = trigger_req.putapi(trigger_xml)
 
-        return (motion_conf, trigger_conf, schedule_conf)
+        return {
+            "motion": str(motion_conf),
+            "trigger": str(trigger_conf),
+            "schedule": str(schedule_conf),
+        }
 
     def putexcepts(self):
         # HDD Error Exception
@@ -1009,7 +1013,10 @@ class Hikvision:
             f.close()
         logexcep_conf = logexcep_req.putapi(logexcep_xml)
 
-        return (hddexcep_conf, logexcep_conf)
+        return {
+            "hdd_exception": str(hddexcep_conf),
+            "login_exception": str(logexcep_conf),
+        }
 
     def putschedule(self):  # Configure recording calendar
         sch_req = ISAPI(
@@ -1020,9 +1027,9 @@ class Hikvision:
             f.close()
         sch_conf = sch_req.putapi(sch_xml)
 
-        return sch_conf
+        return {"schedule": str(sch_conf)}
 
-    def sd_formatter(self):  # Format camera SD card
+    async def sd_formatter(self):  # Format camera SD card
         # Establish the image/video quota
         quota_req = ISAPI(
             f"http://{self.ip}/ISAPI/ContentMgmt/Storage/quota", self.password
@@ -1038,7 +1045,7 @@ class Hikvision:
             self.password,
         )
         format_conf = format_req.putapi("")
-        return (quota_conf, format_conf)
+        return {"quota": str(quota_conf), "formatting": str(format_conf)}
 
     # def upfirmware(self):  # Firmware Updater
     #    # Check camera Firmware version
@@ -1088,7 +1095,7 @@ class Hikvision:
     def reboot(self):  # Camera Reboot
         req = ISAPI(f"http://{self.ip}/ISAPI/System/reboot", self.password)
         reboot = req.putapi("")
-        return reboot
+        return {"reboot": str(reboot)}
 
     def configurate(self, name, sys_name):  # Execute all configurations
         try:
@@ -1101,7 +1108,7 @@ class Hikvision:
             self.putevents()
             self.putschedule()
             self.putosd(name)
-            self.sd_formatter()
+            # await self.sd_formatter()
             # self.upfirmware()
             self.reboot()
             return f"Configurada camara {name}"

@@ -3,12 +3,12 @@
 <IPAddress version="2.0">
 <ipVersion>dual</ipVersion>
 <addressingType>static</addressingType>
-<ipAddress>192.215.200.16</ipAddress>
+<ipAddress>192.217.72.31</ipAddress>
 <subnetMask>255.255.255.0</subnetMask>
 <ipv6Address>::</ipv6Address>
 <bitMask>0</bitMask>
 <DefaultGateway>
-<ipAddress>192.215.200.1</ipAddress>
+<ipAddress>192.217.72.1</ipAddress>
 <ipv6Address>::</ipv6Address>
 </DefaultGateway>
 <PrimaryDNS>
