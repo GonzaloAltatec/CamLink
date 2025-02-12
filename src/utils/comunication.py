@@ -14,7 +14,7 @@ class ISAPI:
     def getapi(self):  # GET operations for HikvisionAPI
         try:
             req = requests.get(
-                self.url, auth=HTTPDigestAuth("admin", self.key), timeout=1
+                self.url, auth=HTTPDigestAuth("admin", self.key), timeout=5
             )
             req.raise_for_status()
 
@@ -41,7 +41,7 @@ class ISAPI:
                 data=c_data,
                 headers={"Content-Type": "application/xml"},
                 auth=HTTPDigestAuth("admin", self.key),
-                timeout=3,
+                timeout=6,
             )
 
             if req.status_code == 200:
