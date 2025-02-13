@@ -16,3 +16,10 @@ client = Odoo()
 async def system_data(id: int):
     req = client.sys_req(id)
     return req
+
+
+# Get NVR Odoo data
+@router.get("/nvr", status_code=status.HTTP_200_OK)
+async def system_nvr(id: int):
+    req = client.sys_nvr(id)
+    return req
