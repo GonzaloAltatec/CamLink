@@ -22,3 +22,13 @@ async def sd_info(id: int):
         api = Hik(device["ip"], device["password"])
         req = api.getsd()
         return req
+
+
+# Read FW version
+@router.get("/firmware", status_code=status.HTTP_200_OK)
+async def fw_info(id: int):
+    device = models.device(id)
+    if device is not None and isinstance(device, dict):
+        api = Hik(device["ip"], device["password"])
+        req = api.info()
+        return req
