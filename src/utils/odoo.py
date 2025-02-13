@@ -57,3 +57,22 @@ class Odoo:
                     return read_req[0]["code"]
                 except json.JSONDecodeError as e:
                     print(f"JSON Decoding error: {e}")
+
+    def sys_nvr(self, sys_id: int):
+        req = self.erp.search("altatec.grabador", "sistema_id", sys_id)
+        req_read = self.erp.read(req)
+        hosts = []
+
+        if req_read is not None and isinstance(req_read, list):
+            for x in req_read:
+                data = {"host": "", "user": "", "password": ""}
+                for k, v in x.items():
+                    if k == "host":
+                        data["host"] = v
+                    elif k == "usuario":
+                        data["user"] = v
+                    elif k == "password":
+                        data["password"] = v
+
+                hosts.append(data)
+        return hosts
