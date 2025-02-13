@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diskQuotaList version="2.0" xmlns="http://www.hikvision.com/ver20/XMLSchema">
+<diskQuota version="2.0" xmlns="http://www.hikvision.com/ver20/XMLSchema">
+<id>1</id>
+<type>ratio</type>
+<videoQuotaRatio>99</videoQuotaRatio>
+<pictureQuotaRatio>1</pictureQuotaRatio>
+<totalVideoVolume>0</totalVideoVolume>
+<totalPictureVolume>0</totalPictureVolume>
+<freeVideoQuota>0</freeVideoQuota>
+<freePictureQuota>0</freePictureQuota>
+</diskQuota>
+</diskQuotaList>
