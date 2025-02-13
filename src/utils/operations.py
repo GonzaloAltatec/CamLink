@@ -66,11 +66,14 @@ class Hikvision:
             return response
 
         except DeviceConnectionError as e:
+            print(e)
             return e
         except DeviceTimeoutError as e:
             print(e)
+            return e
         except DeviceRequestError as e:
             print(e)
+            return e
         except ET.ParseError:
             print("Error al analizar el XML de la respuesta")
         return None
