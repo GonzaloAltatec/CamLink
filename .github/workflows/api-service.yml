@@ -31,16 +31,6 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      
-      # Paso 4: Crear el archivo .env con los secrets
-      - name: Create .env file
-        run: |
-          echo "URL=${{ secrets.API_URL }}" > .env
-          echo "DB=${{ secrets.API_DB }}" >> .env
-          echo "USERNAME=${{ secrets.API_USERNAME }}" >> .env
-          echo "PASSWORD=${{ secrets.API_PASSWORD }}" >> .env
-          # Agregar más variables si es necesario
-        shell: bash
 
       # Paso 4: Instalar dependencias
       - name: Install dependencies
