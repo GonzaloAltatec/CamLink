@@ -12,7 +12,7 @@ def test_device_okey(mocker):
         {"name": "PASSWORD", "valor": "1234"},
         {"name": "DIRECCION IP", "valor": "192.215.200.16"},
         {"name": "PUERTO HTTP", "valor": "80"},
-        {"name": "product_id", "valor": "CVCCV"},
+        {"name": "PRODUCT_ID", "valor": "CVCCV"},
     ]
     instance.element_sys.return_value = "4585"
 
@@ -46,7 +46,7 @@ def test_device_model_not_found(mocker):
     instance = mock_odoo.return_value
     instance.element_ids.return_value = [53407]
     instance.element_data.return_value = [
-        {"name": "product_id", "valor": "CVCCV"},
+        {"name": "PRODUCT_ID", "valor": "CVCCV"},
         {"name": "DIRECCION IP", "valor": "192.215.2000.1"},
         {"name": "PASSWORD", "valor": "1234"},
     ]
