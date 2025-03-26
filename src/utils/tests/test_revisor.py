@@ -4,6 +4,7 @@ from pathlib import Path
 from ...routers.reviser import (
     device_access,
     device_calendar,
+    device_ir,
     device_mail,
     device_mstream,
     device_name,
@@ -121,6 +122,7 @@ def mocker_data():
                     },
                 },
             },
+            "ir": {"mode": "irLight"},
         },
     }
     return data
@@ -139,8 +141,6 @@ async def test_device(mocker, mock_device):
 
     with open(conf_path, "r") as f:
         conf = json.load(f)
-
-    # conf = mock_device["conf"]
 
     mock_hik = mocker.patch("src.routers.reviser.Hik", autospec=True)
     instance = mock_hik.return_value
@@ -327,3 +327,9 @@ async def test_device(mocker, mock_device):
     calendar_result = await device_calendar(mock_device())
     assert calendar_result == "Okey"
     instance.getcalendar.assert_called_once()
+
+    # Mocked IR
+    instance.getir.return_value = {"mode": "irLight"}
+    ir_result = await device_ir(mock_device())
+    assert ir_result == "Okey"
+    instance.getir.assert_called_once()
