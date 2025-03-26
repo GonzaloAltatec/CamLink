@@ -748,6 +748,19 @@ class Hikvision:
             },
         }
 
+    # GET IR
+    def getir(self):
+        req = ISAPI(
+            f"http://{self.ip}/ISAPI/Image/channels/1/SupplementLight", self.password
+        )
+        response = str(req.getapi())
+        root = ET.ElementTree(ET.fromstring(response))
+        mode_text = None
+        mode_tag = root.find("ns:supplementLightMode", self.namespace)
+        if mode_tag is not None:
+            mode_text = mode_tag.text
+        return {"mode": mode_text}
+
     # GET device S/N
     def getsn(self):
         req = ISAPI(f"http://{self.ip}/ISAPI/System/deviceInfo", self.password)

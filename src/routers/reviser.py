@@ -809,6 +809,28 @@ async def device_calendar(device: dict):
         return "Okey"
 
 
+# IR / Lights Configuration
+async def device_ir(device: dict):
+    api = Hik(device["ip"], device["password"])
+    data = api.getir()
+    conf = device["conf"]
+
+    parameters = {"status": "", "mode": ""}
+
+    if data["mode"] != conf["ir"]["mode"]:
+        parameters["status"] = "Error"
+        parameters["mode"] = (
+            f"Mode on device: [{data['mode']}]. Correct mode: [{conf['ir']['mode']}]"
+        )
+    else:
+        parameters["mode"] = "Okey"
+
+    if parameters["status"] == "Error":
+        return parameters
+    else:
+        return "Okey"
+
+
 @router.post("/", status_code=status.HTTP_200_OK)
 async def revise(id_list: IDList):
     erp = Odoo()
@@ -840,6 +862,7 @@ async def revise(id_list: IDList):
                         "quota": {},
                         "sd": {},
                         "calendar": {},
+                        "ir": {},
                     },
                 }
 
@@ -870,6 +893,7 @@ async def revise(id_list: IDList):
                     "device_quota",
                     "device_sd",
                     "device_calendar",
+                    "device_ir",
                 ]
 
                 # Loop to execute all functions inside this module

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SupplementLight version="2.0" xmlns="http://www.hikvision.com/ver20/XMLSchema">
+<supplementLightMode>close</supplementLightMode>
+<mixedLightBrightnessRegulatMode>auto</mixedLightBrightnessRegulatMode>
+<whiteLightBrightness>50</whiteLightBrightness>
+<irLightBrightness>100</irLightBrightness>
+<EventIntelligenceModeCfg>
+<brightnessRegulatMode>auto</brightnessRegulatMode>
+<whiteLightBrightness>50</whiteLightBrightness>
+<irLightBrightness>100</irLightBrightness>
+<associatedVMDHuman>true</associatedVMDHuman>
+</EventIntelligenceModeCfg>
+</SupplementLight>

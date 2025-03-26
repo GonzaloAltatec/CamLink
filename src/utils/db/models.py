@@ -39,7 +39,7 @@ def device(id: int):
                         status_code=404, detail="Device model not found"
                     )
                 # Give Odoo data to Device Model
-                new_device = {
+                compatible_device = {
                     "id": id,
                     "name": device_data["NOMBRE"],
                     "installation": sys_id,
@@ -50,7 +50,7 @@ def device(id: int):
                     "model": device_model,
                     "conf": "",
                 }
-                return new_device
+                return compatible_device
             else:
                 raise HTTPException(
                     status_code=404,

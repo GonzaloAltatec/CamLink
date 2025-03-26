@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NTPServerList version="2.0" xmlns="http://www.hikvision.com/ver20/XMLSchema">
+<NTPServer version="2.0" xmlns="http://www.hikvision.com/ver20/XMLSchema">
+<id>1</id>
+<addressingFormatType>hostname</addressingFormatType>
+<hostName>es.pool.ntp.org</hostName>
+<portNo>123</portNo>
+<synchronizeInterval>60</synchronizeInterval>
+</NTPServer>
+</NTPServerList>
