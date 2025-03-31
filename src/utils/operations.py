@@ -585,7 +585,7 @@ class Hikvision:
 
         if self.model == "DS-2CD2183G2-IU":
             xml_namespace = {"ns": "http://www.hikvision.com/ver10/XMLSchema"}
-        elif self.model == "DS-2CD1143G2-IUF":
+        elif self.model == "DS-2CD1143G2-IUF" or self.model == "DS-2CD1147G2H-LIUF":
             xml_namespace = self.namespace
 
         hdd_tag = root.find("ns:hdd", xml_namespace)
