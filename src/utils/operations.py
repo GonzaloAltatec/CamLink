@@ -134,21 +134,20 @@ class Hikvision:
             web_text = web_tag.text
 
         rtsp_text = None
-        if self.model == "DS-2CD2183G2-IU" or self.model == "DS-2CD1143G2-IUF":
-            rtsp_req = ISAPI(
-                f"http://{self.ip}/ISAPI/Streaming/channels/101", self.password
-            )
-            rtsp_response = str(rtsp_req.getapi())
-            rtsp_root = ET.ElementTree(ET.fromstring(rtsp_response)).getroot()
-            rtsp_tag = rtsp_root.find("ns:Transport", self.namespace)
-            if rtsp_tag is not None:
-                sec_tag = rtsp_tag.find("ns:Security", self.namespace)
-                if sec_tag is not None:
-                    cert_tag = sec_tag.find("ns:certificateType", self.namespace)
-                    if cert_tag is not None:
-                        rtsp_text = cert_tag.text
+        rtsp_req = ISAPI(
+            f"http://{self.ip}/ISAPI/Streaming/channels/101", self.password
+        )
+        rtsp_response = str(rtsp_req.getapi())
+        rtsp_root = ET.ElementTree(ET.fromstring(rtsp_response)).getroot()
+        rtsp_tag = rtsp_root.find("ns:Transport", self.namespace)
+        if rtsp_tag is not None:
+            sec_tag = rtsp_tag.find("ns:Security", self.namespace)
+            if sec_tag is not None:
+                cert_tag = sec_tag.find("ns:certificateType", self.namespace)
+                if cert_tag is not None:
+                    rtsp_text = cert_tag.text
 
-        elif self.model == "DS-7632NXI-K2":
+        if self.model == "DS-7632NXI-K2":
             rtsp_req = ISAPI(
                 f"http://{self.ip}/ISAPI/Security/RTSPCertificate", self.password
             )
@@ -195,48 +194,45 @@ class Hikvision:
         receiver_text = None
         email_text = None
 
-        if self.model == "DS-2CD2183G2-IU" or self.model == "DS-2CD1143G2-IUF":
-            req = ISAPI(
-                f"http://{self.ip}/ISAPI/System/network/mailing/1", self.password
-            )
-            response = str(req.getapi())
-            root = ET.ElementTree(ET.fromstring(response)).getroot()
+        req = ISAPI(f"http://{self.ip}/ISAPI/System/network/mailing/1", self.password)
+        response = str(req.getapi())
+        root = ET.ElementTree(ET.fromstring(response)).getroot()
 
-            sender_tag = root.find("ns:sender", self.namespace)
-            if sender_tag is not None:
-                email_tag = sender_tag.find("ns:emailAddress", self.namespace)
-                if email_tag is not None:
-                    sender_text = email_tag.text
+        sender_tag = root.find("ns:sender", self.namespace)
+        if sender_tag is not None:
+            email_tag = sender_tag.find("ns:emailAddress", self.namespace)
+            if email_tag is not None:
+                sender_text = email_tag.text
 
-                name_tag = sender_tag.find("ns:name", self.namespace)
-                if name_tag is not None:
-                    name_text = name_tag.text
+            name_tag = sender_tag.find("ns:name", self.namespace)
+            if name_tag is not None:
+                name_text = name_tag.text
 
-                smtp_tag = sender_tag.find("ns:smtp", self.namespace)
-                if smtp_tag is not None:
-                    server_tag = smtp_tag.find("ns:hostName", self.namespace)
-                    if server_tag is not None:
-                        server_text = server_tag.text
+            smtp_tag = sender_tag.find("ns:smtp", self.namespace)
+            if smtp_tag is not None:
+                server_tag = smtp_tag.find("ns:hostName", self.namespace)
+                if server_tag is not None:
+                    server_text = server_tag.text
 
-                    port_tag = smtp_tag.find("ns:portNo", self.namespace)
-                    if port_tag is not None:
-                        port_text = port_tag.text
+                port_tag = smtp_tag.find("ns:portNo", self.namespace)
+                if port_tag is not None:
+                    port_text = port_tag.text
 
-            receiver_lst_tag = root.find("ns:receiverList", self.namespace)
-            if receiver_lst_tag is not None:
-                receiver_tag = receiver_lst_tag.find("ns:receiver", self.namespace)
-                if receiver_tag is not None:
-                    receiver_name_tag = receiver_tag.find("ns:name", self.namespace)
-                    if receiver_name_tag is not None:
-                        receiver_text = receiver_name_tag.text
+        receiver_lst_tag = root.find("ns:receiverList", self.namespace)
+        if receiver_lst_tag is not None:
+            receiver_tag = receiver_lst_tag.find("ns:receiver", self.namespace)
+            if receiver_tag is not None:
+                receiver_name_tag = receiver_tag.find("ns:name", self.namespace)
+                if receiver_name_tag is not None:
+                    receiver_text = receiver_name_tag.text
 
-                    receiver_email_tag = receiver_tag.find(
-                        "ns:emailAddress", self.namespace
-                    )
-                    if receiver_email_tag is not None:
-                        email_text = receiver_email_tag.text
+                receiver_email_tag = receiver_tag.find(
+                    "ns:emailAddress", self.namespace
+                )
+                if receiver_email_tag is not None:
+                    email_text = receiver_email_tag.text
 
-        elif self.model == "DS-7632NXI-K2":
+        if self.model == "DS-7632NXI-K2":
             req = ISAPI(f"http://{self.ip}/ISAPI/System/Network/mailing", self.password)
             response = str(req.getapi())
             root = ET.ElementTree(ET.fromstring(response)).getroot()
