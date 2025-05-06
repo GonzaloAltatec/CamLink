@@ -41,7 +41,11 @@ jobs:
           echo "PASSWORD=${{ secrets.API_PASSWORD }}" >> .env
           # Agregar más variables si es necesario
         shell: bash
-
+        
+      #Testeo de creación de variables en .env (Debug)
+      - name: Show environment variables (safe subset)
+        run: env | grep -E "URL|DB|USERNAME|PASSWORD"
+        
       # Paso 4: Instalar dependencias
       - name: Install dependencies
         run: |
