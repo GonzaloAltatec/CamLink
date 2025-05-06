@@ -1073,7 +1073,7 @@ class Hikvision:
     #        f"{self.act_dir}/firmwares/{self.model}/Version.txt", "r"
     #    )
     #    for ver in local_version_file.readlines():
-    #        local_version_list = ver.split(".")
+    #       local_version_list = ver.split(".")
 
     #    cam_ver_str = version.replace("V", "")
     #    cam_ver_list = cam_ver_str.split(".")
@@ -1104,6 +1104,16 @@ class Hikvision:
     #            elif cam_ver_list[2] == local_version_list[2]:
     #                return "FIRMWARE ACTUALIZADO"
 
+    def putir(self):
+        req = ISAPI(
+            f"http://{self.ip}/ISAPI/Image/channels/1/SupplementLight", self.password
+        )
+        with open(f"{self.directory}supplight.xml") as f:
+            ir_xml = f.read()
+            f.close()
+        ir_conf = req.putapi(ir_xml)
+        return {"ir": str(ir_conf)}
+
     def reboot(self):  # Camera Reboot
         req = ISAPI(f"http://{self.ip}/ISAPI/System/reboot", self.password)
         reboot = req.putapi("")
@@ -1120,6 +1130,7 @@ class Hikvision:
             self.putevents()
             self.putschedule()
             self.putosd(name)
+            self.putir()
             # await self.sd_formatter()
             # self.upfirmware()
             self.reboot()
