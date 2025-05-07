@@ -171,6 +171,16 @@ async def device_sd(id_list: IDList, background_tasks: BackgroundTasks):
             # conf_status.append(conf)
     return {"status": "formatting"}
 
+# Configure IR
+@router.post("/ir", status_code=status.HTTP_200_OK)
+async def device_ir(id: int):
+    device = await device_dict(id)
+    conf_status = []
+    if device is not None and isinstance(device, dict):
+        api = Hik(device["ip"], device["password"])
+        conf = api.putir()
+        conf_status.append(conf)
+    return conf_status
 
 # Reboot
 @router.post("/reboot", status_code=status.HTTP_200_OK)
