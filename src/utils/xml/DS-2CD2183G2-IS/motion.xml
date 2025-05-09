@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MotionDetection version="2.0" xmlns="http://www.hikvision.com/ver20/XMLSchema">
+<enabled>true</enabled>
+<enableHighlight>false</enableHighlight>
+<samplingInterval>2</samplingInterval>
+<startTriggerTime>500</startTriggerTime>
+<endTriggerTime>500</endTriggerTime>
+<regionType>grid</regionType>
+<Grid>
+<rowGranularity>18</rowGranularity>
+<columnGranularity>22</columnGranularity>
+</Grid>
+<MotionDetectionLayout version="2.0" xmlns="http://www.hikvision.com/ver20/XMLSchema">
+<sensitivityLevel>80</sensitivityLevel>
+<layout>
+<gridMap>fffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffcfffffc000000</gridMap>
+<RegionList size="4">
+<Region>
+<id>1</id>
+<RegionCoordinatesList>
+<RegionCoordinates>
+<positionX>2</positionX>
+<positionY>993</positionY>
+</RegionCoordinates>
+<RegionCoordinates>
+<positionX>2</positionX>
+<positionY>2</positionY>
+</RegionCoordinates>
+<RegionCoordinates>
+<positionX>996</positionX>
+<positionY>2</positionY>
+</RegionCoordinates>
+<RegionCoordinates>
+<positionX>996</positionX>
+<positionY>995</positionY>
+</RegionCoordinates>
+</RegionCoordinatesList>
+</Region>
+</RegionList>
+</layout>
+<targetType>human,vehicle</targetType>
+</MotionDetectionLayout>
+</MotionDetection>

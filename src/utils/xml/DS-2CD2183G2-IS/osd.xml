@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VideoInputChannel version="2.0" xmlns="http://www.hikvision.com/ver20/XMLSchema">
+<id>1</id>
+<inputPort>1</inputPort>
+<name>CxNx</name>
+<videoFormat>PAL</videoFormat>
+</VideoInputChannel>
