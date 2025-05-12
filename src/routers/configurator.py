@@ -218,7 +218,6 @@ async def configure(id_list: IDList):
                 "device_event",
                 "device_exception",
                 "device_calendar",
-                "device_ir"
                 # "device_sd",
                 # "device_reboot",
             ]

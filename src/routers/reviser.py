@@ -830,7 +830,7 @@ async def device_ir(device: dict):
     else:
         return "Okey"
 
-# General Root revision
+
 @router.post("/", status_code=status.HTTP_200_OK)
 async def revise(id_list: IDList):
     erp = Odoo()
