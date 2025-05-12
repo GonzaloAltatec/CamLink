@@ -1104,11 +1104,11 @@ class Hikvision:
     #            elif cam_ver_list[2] == local_version_list[2]:
     #                return "FIRMWARE ACTUALIZADO"
 
-    def putir(self):
+    def putir(self): # Camera IR Lights configuration
         req = ISAPI(
             f"http://{self.ip}/ISAPI/Image/channels/1/SupplementLight", self.password
         )
-        with open(f"{self.directory}supplight.xml") as f:
+        with open(f"{self.directory}ir.xml") as f:
             ir_xml = f.read()
             f.close()
         ir_conf = req.putapi(ir_xml)
