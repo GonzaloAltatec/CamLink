@@ -583,7 +583,7 @@ class Hikvision:
         # Revisar esta variable. Puede cambiar según Firmware
         xml_namespace = None
 
-        if self.model == "DS-2CD2183G2-IU" or self.model == "DS-2CD2183G2-IS":
+        if self.model == "DS-2CD2183G2-IU":
             xml_namespace = {"ns": "http://www.hikvision.com/ver10/XMLSchema"}
         elif self.model == "DS-2CD1143G2-IUF" or self.model == "DS-2CD1147G2H-LIUF":
             xml_namespace = self.namespace
@@ -1104,11 +1104,11 @@ class Hikvision:
     #            elif cam_ver_list[2] == local_version_list[2]:
     #                return "FIRMWARE ACTUALIZADO"
 
-    def putir(self):
+    def putir(self): # Configure camera IR Lights
         req = ISAPI(
             f"http://{self.ip}/ISAPI/Image/channels/1/SupplementLight", self.password
         )
-        with open(f"{self.directory}supplight.xml") as f:
+        with open(f"{self.directory}ir.xml") as f:
             ir_xml = f.read()
             f.close()
         ir_conf = req.putapi(ir_xml)

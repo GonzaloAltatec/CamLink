@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Time version="2.0" xmlns="http://www.hikvision.com/ver20/XMLSchema">
-    <timeMode>NTP</timeMode>
-    <timeZone>CST-1:00:00DST01:00:00,M3.5.0/02:00:00,M10.5.0/03:00:00</timeZone>
-</Time>
