@@ -583,7 +583,7 @@ class Hikvision:
         # Revisar esta variable. Puede cambiar según Firmware
         xml_namespace = None
 
-        if self.model == "DS-2CD2183G2-IU" or self.model == "DS-2CD2183G2-IS":
+        if self.model == "DS-2CD2183G2-IU":
             xml_namespace = {"ns": "http://www.hikvision.com/ver10/XMLSchema"}
         elif self.model == "DS-2CD1143G2-IUF" or self.model == "DS-2CD1147G2H-LIUF":
             xml_namespace = self.namespace
