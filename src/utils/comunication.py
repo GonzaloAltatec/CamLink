@@ -1,3 +1,13 @@
+"""
+comunication.py - Módulo para la comunicación con dispositivos Hikvision
+
+Este módulo proporciona clases para la comunicación con dispositivos Hikvision
+usando la API ISAPI. Incluye manejo de errores y autenticación.
+
+Clases principales:
+- ISAPI: Maneja las operaciones GET y PUT con la API ISAPI
+"""
+
 from fastapi import HTTPException
 import requests
 from requests.exceptions import ConnectionError, Timeout, RequestException
@@ -7,14 +17,47 @@ from .exceptions import DeviceRequestError, DeviceConnectionError, DeviceTimeout
 
 
 class ISAPI:
-    def __init__(self, url, key):
+    """
+    Cliente para la comunicación con la API ISAPI de Hikvision
+
+    Args:
+        url (str): URL del dispositivo Hikvision
+        key (str): Contraseña de acceso
+
+    Attributes:
+        url (str): URL del dispositivo
+        key (str): Contraseña de acceso
+    """
+
+    def __init__(self, url: str, key: str):
+        """
+        Inicializa una nueva instancia del cliente ISAPI
+
+        Args:
+            url (str): URL del dispositivo Hikvision
+            key (str): Contraseña de acceso
+        """
         self.url = url
         self.key = key
 
-    def getapi(self):  # GET operations for HikvisionAPI
+    def getapi(self) -> str:
+        """
+        Realiza una operación GET en la API ISAPI
+
+        Returns:
+            str: Respuesta en formato XML si exitosa
+            requests.Response: Objeto Response si hay error
+
+        Raises:
+            DeviceConnectionError: Si hay error de conexión
+            DeviceTimeoutError: Si hay timeout en la conexión
+            DeviceRequestError: Si hay error en la solicitud
+        """
         try:
             req = requests.get(
-                self.url, auth=HTTPDigestAuth("admin", self.key), timeout=5
+                self.url,
+                auth=HTTPDigestAuth("admin", self.key),
+                timeout=5
             )
             req.raise_for_status()
 
@@ -34,7 +77,22 @@ class ISAPI:
             print("\n[-] Interrumpiendo Programa...")
             return None
 
-    def putapi(self, c_data):  # PUT operations for HikvisionAPI
+    def putapi(self, c_data: str) -> str:
+        """
+        Realiza una operación PUT en la API ISAPI
+
+        Args:
+            c_data (str): Datos XML a enviar
+
+        Returns:
+            str: Respuesta en formato XML si exitosa
+            requests.Response: Objeto Response si hay error
+
+        Raises:
+            DeviceConnectionError: Si hay error de conexión
+            DeviceTimeoutError: Si hay timeout en la conexión
+            DeviceRequestError: Si hay error en la solicitud
+        """
         try:
             req = requests.put(
                 self.url,

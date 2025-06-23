@@ -1,3 +1,41 @@
+"""
+operations.py - Clase principal para operaciones con dispositivos Hikvision
+
+Esta clase proporciona métodos para interactuar con dispositivos Hikvision a través de la API ISAPI.
+Incluye operaciones de lectura y escritura de configuración, así como manejo de errores específicos.
+
+Clases principales:
+- Hikvision: Clase principal para operaciones con dispositivos Hikvision
+
+Métodos principales:
+- getmodel: Obtiene el modelo del dispositivo
+- defgateway: Define la puerta de enlace por defecto
+- getname: Obtiene el nombre del dispositivo
+- getntp: Obtiene la configuración NTP
+- getdst: Obtiene la configuración DST
+- getsec: Obtiene la configuración de seguridad
+- getdns: Obtiene la configuración DNS
+- getmail: Obtiene la configuración de correo
+- getsn: Obtiene el número de serie del dispositivo
+- getmstream: Obtiene la configuración del stream principal
+- getir: Obtiene la configuración del IR
+
+Métodos de configuración (put):
+- putname: Configura el nombre del dispositivo
+- putime: Configura la hora y DST
+- putosd: Configura el OSD (On Screen Display)
+- putmail: Configura los datos de correo
+- putsec: Configura opciones de seguridad
+- putnet: Configura la red (DNS)
+- putvideo: Configura la configuración de video
+- putir: Configura el IR
+- reboot: Reinicia el dispositivo
+- sd_formatter: Formatea la tarjeta SD
+- putexcepts: Configura excepciones
+- putevents: Configura eventos
+- putschedule: Configura el calendario
+"""
+
 from .comunication import ISAPI
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -5,7 +43,33 @@ from .exceptions import DeviceRequestError, DeviceConnectionError, DeviceTimeout
 
 
 class Hikvision:
+    """
+    Clase principal para operaciones con dispositivos Hikvision
+
+    Args:
+        ip (str): Dirección IP del dispositivo
+        password (str): Contraseña de acceso
+
+    Attributes:
+        ip (str): Dirección IP del dispositivo
+        password (str): Contraseña de acceso
+        xmlschema (str): Esquema XML para la API ISAPI
+        namespace (dict): Espacio de nombres XML
+        model (str): Modelo del dispositivo
+        gateway (str): Puerta de enlace por defecto
+        api (ISAPI): Instancia del cliente ISAPI
+        act_dir (Path): Directorio actual del archivo
+        directory (str): Ruta al directorio de XML específico del modelo
+    """
+
     def __init__(self, ip, password):
+        """
+        Inicializa una nueva instancia de la clase Hikvision
+
+        Args:
+            ip (str): Dirección IP del dispositivo
+            password (str): Contraseña de acceso
+        """
         self.ip = ip
         self.password = password
         self.xmlschema = "{http://www.hikvision.com/ver20/XMLSchema}"

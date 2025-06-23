@@ -1,28 +1,55 @@
-# FastAPI imports
+"""
+configurator.py - Router para la configuración de dispositivos CCTV
+
+Este módulo proporciona endpoints para configurar diversos aspectos de los dispositivos CCTV,
+como nombre, tiempo, OSD, correo, seguridad, red y más.
+
+Endpoints disponibles:
+- /name: Configura el nombre del dispositivo
+- /time: Configura la hora y DST
+- /osd: Configura el OSD (On Screen Display)
+- /mail: Configura los datos de correo
+- /security: Configura opciones de seguridad
+- /dns: Configura la red (DNS)
+- /video: Configura la configuración de video
+- /event: Configura eventos
+- /exception: Configura excepciones
+- /calendar: Configura el calendario
+- /sd: Formatea la tarjeta SD
+- /ir: Configura el IR
+- /reboot: Reinicia el dispositivo
+- /: Configuración en lote
+"""
+
+# Imports FastAPI
 from fastapi import APIRouter, BackgroundTasks, status
 
-# Models import
+# Imports de modelos y schemas
 from src.utils.db import models
 from src.utils.db.schemas import IDList
 
-# Hikvision API operator
+# Operador API Hikvision
 from src.utils.operations import Hikvision as Hik
 
-# Custom Exceptions
+# Excepciones personalizadas
 from src.utils.exceptions import (
     DeviceConnectionError,
     DeviceRequestError,
     DeviceTimeoutError,
 )
 
-# Event logger
+# Logging
 import logging
 import inspect
 
+# Configuración de logging
 logging.basicConfig(level=logging.ERROR)
 
-# Router endpoint definition
-router = APIRouter(tags=["configurator"], prefix="/configure")
+# Router FastAPI para endpoints de configuración
+router = APIRouter(
+    tags=["configurator"],  # Etiqueta para la documentación Swagger
+    prefix="/configure"     # Prefijo para todos los endpoints
+)
 
 
 ## Get device info as dictionary
@@ -219,7 +246,7 @@ async def configure(id_list: IDList):
                 "device_exception",
                 "device_calendar",
                 "device_ir"
-                # "device_sd",
+                "device_sd",
                 # "device_reboot",
             ]
 

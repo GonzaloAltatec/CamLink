@@ -1,29 +1,51 @@
-# FastAPI imports
+"""
+reviser.py - Router para la revisión de configuraciones de dispositivos CCTV
+
+Este módulo proporciona endpoints para verificar la configuración actual de los dispositivos CCTV
+en comparación con la configuración esperada en el ERP.
+
+Endpoints disponibles:
+- /: Revisión general de configuración
+- /name: Verifica el nombre del dispositivo
+- /ntp: Verifica la configuración NTP
+- /dst: Verifica la configuración DST
+- /security: Verifica la configuración de seguridad
+- /dns: Verifica la configuración DNS
+- /mail: Verifica la configuración de correo
+"""
+
+# Imports FastAPI
 from fastapi import APIRouter, status
 
-# Custom Exceptions
+# Excepciones personalizadas
 from src.utils.exceptions import (
     DeviceConnectionError,
     DeviceRequestError,
     DeviceTimeoutError,
 )
 
-# Models and data formatting imports
+# Imports de modelos y schemas
 from ..utils.db import models
 from ..utils.db.schemas import IDList
 
-# Hikvision API operator
+# Operador API Hikvision
 from ..utils.operations import Hikvision as Hik
 
-# Odoo requests library
+# Cliente Odoo
 from ..utils.odoo import Odoo
 
-# Event logger
+# Logging
 import logging
 import inspect
 
+# Configuración de logging
 logging.basicConfig(level=logging.ERROR)
-router = APIRouter(tags=["reviser"], prefix="/revise")
+
+# Router FastAPI para endpoints de revisión
+router = APIRouter(
+    tags=["reviser"],  # Etiqueta para la documentación Swagger
+    prefix="/revise"   # Prefijo para todos los endpoints
+)
 
 
 # Check if DeviceName match with Odoo DeviceName
