@@ -1041,7 +1041,7 @@ class Hikvision:
 
         return {"schedule": str(sch_conf)}
 
-    async def sd_formatter(self):  # Format camera SD card
+    def sd_formatter(self):  # Format camera SD card
         # Establish the image/video quota
         quota_req = ISAPI(
             f"http://{self.ip}/ISAPI/ContentMgmt/Storage/quota", self.password

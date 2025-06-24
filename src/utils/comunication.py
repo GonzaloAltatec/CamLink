@@ -41,18 +41,15 @@ class ISAPI:
                 data=c_data,
                 headers={"Content-Type": "application/xml"},
                 auth=HTTPDigestAuth("admin", self.key),
-                timeout=6,
+                timeout=60,
             )
 
             if req.status_code == 200:
                 return req.text
             else:
-                return req
-
-            # EXCEPCIONES
-        except Exception:
-            raise HTTPException(status_code=404)
-
+                return req       
+        except:
+            pass
 
 class OdooAPI:
     def __init__(self, url, db, username, password):

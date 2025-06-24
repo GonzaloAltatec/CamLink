@@ -1,5 +1,5 @@
 # FastAPI imports
-from fastapi import APIRouter, BackgroundTasks, status
+from fastapi import APIRouter, status
 
 # Models import
 from src.utils.db import models
@@ -154,22 +154,15 @@ async def device_calendar(id: int):
 
 # Configure SD
 @router.post("/sd", status_code=status.HTTP_200_OK)
-async def device_sd(id_list: IDList, background_tasks: BackgroundTasks):
-    async def safe_formatter_sd(api: Hik):
-        try:
-            await api.sd_formatter()
-        except Exception as e:
-            print(f"Error en {api.ip}: {str(e)}")
-
-    for device_id in id_list.ids:
-        device = await device_dict(device_id)
-        # conf_status = []
-        if device is not None and isinstance(device, dict):
-            print(f"formateando dispositivo: {id}")
-            api = Hik(device["ip"], device["password"])
-            background_tasks.add_task(safe_formatter_sd, api)
-            # conf_status.append(conf)
-    return {"status": "formatting"}
+async def device_sd(id: int):
+    device = await device_dict(id)
+    conf_status = []
+    if device is not None and isinstance(device, dict):
+        print(f"formateando dispositivo: {id}")
+        api = Hik(device["ip"], device["password"])
+        conf = api.sd_formatter()
+        conf_status.append(conf)
+    return "formatting"
 
 # Configure IR
 @router.post("/ir", status_code=status.HTTP_200_OK)
@@ -218,7 +211,7 @@ async def configure(id_list: IDList):
                 "device_event",
                 "device_exception",
                 "device_calendar",
-                "device_ir"
+                "device_ir",
                 "device_sd",
                 # "device_reboot",
             ]
@@ -228,6 +221,8 @@ async def configure(id_list: IDList):
                 if func_name in functions:
                     result = await functions[func_name](id)
                     configurations.append(result)
+                    print(configurations)
+
 
         except DeviceConnectionError as e:
             logging.error(f"Connection Error: {e}")
@@ -240,5 +235,4 @@ async def configure(id_list: IDList):
         except DeviceRequestError as e:
             logging.error(f"Request Error: {e}")
             configurations.append({"id": str(id), "details": f"Request Error: {e}"})
-
-    return configurations
+    return status.HTTP_200_OK
